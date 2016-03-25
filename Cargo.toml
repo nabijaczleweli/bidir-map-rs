@@ -1,0 +1,13 @@
+[package]
+name = "bidir-map"
+description = "Bidirectional map implementation for Rust"
+documentation = "https://cdn.rawgit.com/nabijaczleweli/bidir-map-rs/doc/bidir_map/index.html"
+repository = "https://github.com/nabijaczleweli/bidir-map-rs"
+readme = "README.md"
+keywords = ["bidir-map", "container", "bidirectional", "map"]
+license = "MIT"
+# Remember to also update in appveyor.yml
+version = "0.1.0"
+authors = ["nabijaczleweli <nabijaczleweli@gmail.com>",
+           "Cat Plus Plus <piotrlegnica@piotrl.pl>"]
+exclude = ["*.enc"]
