@@ -329,6 +329,40 @@
 <span id="286">286</span>
 <span id="287">287</span>
 <span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Borrow</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>;
@@ -542,19 +576,53 @@
 		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>().<span class='ident'>any</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>key</span> <span class='op'>==</span> <span class='ident'>kvs</span>.<span class='number'>1</span>)
 	}
 
-	<span class='comment'>//TODO: implement get_mut</span>
-	<span class='comment'>/*pub fn get_mut_by_first&lt;Q&gt;(&amp;mut self, key: &amp;Q) -&gt; Option&lt;&amp;mut Kv2&gt;
-		where Kv1: Borrow&lt;Q&gt;,
-		      Q  : PartialEq&lt;Kv1&gt;,
+	<span class='doccomment'>/// Returns a mutable reference to the second K/V corresponding to the first K/V.</span>
+	<span class='doccomment'>///</span>
+	<span class='doccomment'>/// # Examples</span>
+	<span class='doccomment'>///</span>
+	<span class='doccomment'>/// ```</span>
+	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
+	<span class='doccomment'>///</span>
+	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
+	<span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
+	<span class='doccomment'>/// if let Some(x) = map.get_mut_by_first(&amp;1) {</span>
+	<span class='doccomment'>///     *x = &quot;b&quot;;</span>
+	<span class='doccomment'>/// }</span>
+	<span class='doccomment'>/// assert_eq!(map.get_by_first(&amp;1), Some(&amp;&quot;b&quot;));</span>
+	<span class='doccomment'>/// ```</span>
+	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut_by_first</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>Q</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Kv2</span><span class='op'>&gt;</span>
+		<span class='kw'>where</span> <span class='ident'>Kv1</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>,
+		      <span class='ident'>Q</span>  : <span class='ident'>PartialEq</span><span class='op'>&lt;</span><span class='ident'>Kv1</span><span class='op'>&gt;</span>,
 	{
-		self.cont.iter_mut().find(|&amp;mut kvs| key == kvs.0).map(|&amp;mut kvs| &amp;mut kvs.1)
+		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>().<span class='ident'>find</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>key</span> <span class='op'>==</span> <span class='ident'>kvs</span>.<span class='number'>0</span>).<span class='ident'>and_then</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> {
+			<span class='prelude-val'>Some</span>(<span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span>(((<span class='kw-2'>&amp;</span><span class='ident'>kvs</span>.<span class='number'>1</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Kv2</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Kv2</span>) })  <span class='comment'>// This *should* be safe, we&#39;re casting &amp;Kv2 to &amp;mut Kv2 from a mutable context</span>
+			                                                               <span class='comment'>// Using mutables all the way wouldn&#39;t work for the life of me.</span>
+		})
 	}
-	pub fn get_mut_by_second&lt;Q&gt;(&amp;mut self, key: &amp;Q) -&gt; Option&lt;&amp;mut Kv1&gt;
-		where Kv2: Borrow&lt;Q&gt;,
-		      Q  : PartialEq&lt;Kv2&gt;,
+
+	<span class='doccomment'>/// Returns a mutable reference to the first K/V corresponding to the second K/V.</span>
+	<span class='doccomment'>///</span>
+	<span class='doccomment'>/// # Examples</span>
+	<span class='doccomment'>///</span>
+	<span class='doccomment'>/// ```</span>
+	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
+	<span class='doccomment'>///</span>
+	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
+	<span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
+	<span class='doccomment'>/// if let Some(x) = map.get_mut_by_second(&amp;&quot;a&quot;) {</span>
+	<span class='doccomment'>///     *x = 2;</span>
+	<span class='doccomment'>/// }</span>
+	<span class='doccomment'>/// assert_eq!(map.get_by_second(&amp;&quot;a&quot;), Some(&amp;2));</span>
+	<span class='doccomment'>/// ```</span>
+	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut_by_second</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>Q</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Kv1</span><span class='op'>&gt;</span>
+		<span class='kw'>where</span> <span class='ident'>Kv2</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>,
+		      <span class='ident'>Q</span>  : <span class='ident'>PartialEq</span><span class='op'>&lt;</span><span class='ident'>Kv2</span><span class='op'>&gt;</span>,
 	{
-		self.cont.iter_mut().find(|&amp;mut kvs| key == kvs.1).map(|&amp;mut kvs| &amp;mut kvs.0)
-	}*/</span>
+		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>().<span class='ident'>find</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>key</span> <span class='op'>==</span> <span class='ident'>kvs</span>.<span class='number'>1</span>).<span class='ident'>and_then</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> {
+			<span class='prelude-val'>Some</span>(<span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span>(((<span class='kw-2'>&amp;</span><span class='ident'>kvs</span>.<span class='number'>0</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Kv1</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Kv1</span>) })  <span class='comment'>// This *should* be safe, we&#39;re casting &amp;Kv1 to &amp;mut Kv1 from a mutable context</span>
+			                                                               <span class='comment'>// Using mutables all the way wouldn&#39;t work for the life of me.</span>
+		})
+	}
 
 	<span class='doccomment'>/// Removes the pair corresponding to the first K/V from the map, returning it if the key was previously in the map.</span>
 	<span class='doccomment'>///</span>
