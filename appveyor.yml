@@ -19,7 +19,7 @@ install:
   -
   - bash -lc "pacman --needed --noconfirm -Sy pacman-mirrors"
   - bash -lc "pacman --noconfirm -Sy"
-  - bash -lc "pacman --noconfirm -S mingw-w64-x86_64-toolchain cmake"
+  - bash -lc "pacman --noconfirm -S mingw-w64-x86_64-toolchain"
 
 build: off
 build_script:
@@ -33,4 +33,4 @@ notifications:
   - provider: Email
     to:
       - nabijaczleweli@gmail.com
-    on_build_status_changed: true 
+    on_build_status_changed: true
