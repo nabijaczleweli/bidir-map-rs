@@ -9,15 +9,15 @@ before_install:
 
 after_success:
   - if [ -n "$TRAVIS_PULL_REQUEST" ] && [ "$TRAVIS_RUST_VERSION" == "stable" ]; then
-      echo "Update docs for commits $TRAVIS_COMMIT_RANGE" > $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG
-      echo >> $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG
-      git log $TRAVIS_COMMIT_RANGE --pretty=oneline >> $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG
-      mkdir -p ~/.ssh && cp gh_rsa ~/.ssh/id_rsa && chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa
-      git clone -b doc git@github.com:nabijaczleweli/bidir-map-rs.git $TRAVIS_BUILD_DIR-doc
-      ln -s $TRAVIS_BUILD_DIR-doc target/doc
-      cargo doc
-      cd $TRAVIS_BUILD_DIR-doc
-      git config --global user.email "nabijaczleweli@gmail.com" && git config --global user.name "Nabijaczleweli Autouploader Bot" && git config --global push.default simple
-      git add * && git commit -F $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG
-      git push && cd $TRAVIS_BUILD_DIR
+      echo "Update docs for commits $TRAVIS_COMMIT_RANGE" > $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG;
+      echo >> $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG;
+      git log $TRAVIS_COMMIT_RANGE --pretty=oneline >> $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG;
+      mkdir -p ~/.ssh && cp gh_rsa ~/.ssh/id_rsa && chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa;
+      git clone -b doc git@github.com:nabijaczleweli/bidir-map-rs.git $TRAVIS_BUILD_DIR-doc;
+      ln -s $TRAVIS_BUILD_DIR-doc target/doc;
+      cargo doc;
+      cd $TRAVIS_BUILD_DIR-doc;
+      git config --global user.email "nabijaczleweli@gmail.com" && git config --global user.name "Nabijaczleweli Autouploader Bot" && git config --global push.default simple;
+      git add * && git commit -F $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG;
+      git push && cd $TRAVIS_BUILD_DIR;
     fi 
