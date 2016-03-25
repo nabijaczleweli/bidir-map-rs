@@ -4,46 +4,20 @@ rust:
   - beta
   - nightly
 
-cache:
-  apt: true
-
-addons:
-  apt:
-    packages:
-      - libxmu-dev
-    sources:
-      - r-packages-precise
-
-deploy:
-  provider: releases
-  api_key:
-    secure: "PMgPcgEQJgFwlIslKzxPOeM+NMMAhTjyjrAT8qhmJ/EhLd/btGZIC/W/6EezwIG7kj62A59fyvo+hnS9+KhaSvtgLzvqdLrbz1ozjYvfZsmQkZt3k5B0jCYTndpzSpIba+elbFfcfYHoquiQQqqZj+mxeMCS7yg11NxTRu5e6TMsD9HqoVxWNrFSi9cxwslDAFNmTaUK31Ap5TAad6s2piM1CprRCvnoRFF5EmkBqbg7JYJmuh4fLu+WMVuDoFuARakki/tX59S8EWY2UA+a0BrvU+wMjsYjBrgpFs5HUowNpEKlKTGgS6u0X0y38aZZrU2FX93NdepDx7GogmH1Eeb9kdf0n5tWV5agXfQb+4U3350pwEOb3WLmWFY4U4/WtwvnrODFVx9UqfYc2o4THOgGaTc9+sccdqbbz6jPWXTXqqUjMVA8p8dNGsCkhA1Bh22oyfaI4CH80qvXtfl7JIKMvS9jd/QeoWOLpA3rKyHU9sjUFzXOIHZ9EOyqVMVj1PNmPxJuSgLnuSUmSKZw51zjbXQH3WplvrqSMvgiD9sMB2XpEIAmLLBKrb5+XcjNtN3LgtZmihBwsfD4mLnKf3m2OY5Y3+USOzIJUimtaxhCJ9k2zUSxbmg5rvsTjGgFH/wA2/La/KR97w7RlZs+mpxHxacjIkMlHYBDmGRsTJI="
-  file: "$HOME/lib/libBearLibTerminal.so"
-  skip_cleanup: true
-  on:
-    tags: true
-
 before_install:
-  - openssl aes-256-cbc -K $encrypted_2620d498bbb7_key -iv $encrypted_2620d498bbb7_iv -in gh_rsa.enc -out gh_rsa -d
-
-install:
-  - git clone https://github.com/nabijaczleweli/BearLibTerminal ~/BearLibTerminal && cd ~/BearLibTerminal/Build
-  - cmake -G"Unix Makefiles" .. && make BearLibTerminal
-  - mkdir ~/lib/ && cp ../Output/Linux64/libBearLibTerminal.so ~/lib/ && cd $TRAVIS_BUILD_DIR
-
-script:
-  - LD_PRELOAD=~/lib/libBearLibTerminal.so LD_LIBRARY_PATH="~/lib:$LD_LIBRARY_PATH" LIBRARY_PATH=~/lib cargo build --verbose
-  - LD_PRELOAD=~/lib/libBearLibTerminal.so LD_LIBRARY_PATH="~/lib:$LD_LIBRARY_PATH" LIBRARY_PATH=~/lib cargo test --verbose
+  - openssl aes-256-cbc -K $encrypted_3412bc54ea0c_key -iv $encrypted_3412bc54ea0c_iv -in gh_rsa.enc -out gh_rsa -d
 
 after_success:
-  - if [ -n "$TRAVIS_PULL_REQUEST" ] && [ "$TRAVIS_RUST_VERSION" == "stable" ]; then echo "Update docs for commits $TRAVIS_COMMIT_RANGE" > $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG; fi
-  - if [ -n "$TRAVIS_PULL_REQUEST" ] && [ "$TRAVIS_RUST_VERSION" == "stable" ]; then echo >> $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG; fi
-  - if [ -n "$TRAVIS_PULL_REQUEST" ] && [ "$TRAVIS_RUST_VERSION" == "stable" ]; then git log $TRAVIS_COMMIT_RANGE --pretty=oneline >> $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG; fi
-  - if [ -n "$TRAVIS_PULL_REQUEST" ] && [ "$TRAVIS_RUST_VERSION" == "stable" ]; then mkdir -p ~/.ssh && cp gh_rsa ~/.ssh/id_rsa && chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa; fi
-  - if [ -n "$TRAVIS_PULL_REQUEST" ] && [ "$TRAVIS_RUST_VERSION" == "stable" ]; then git clone -b doc git@github.com:nabijaczleweli/BearLibTerminal.rs.git $TRAVIS_BUILD_DIR-doc; fi
-  - if [ -n "$TRAVIS_PULL_REQUEST" ] && [ "$TRAVIS_RUST_VERSION" == "stable" ]; then ln -s $TRAVIS_BUILD_DIR-doc target/doc; fi
-  - if [ -n "$TRAVIS_PULL_REQUEST" ] && [ "$TRAVIS_RUST_VERSION" == "stable" ]; then LIBRARY_PATH=~/lib cargo doc; fi
-  - if [ -n "$TRAVIS_PULL_REQUEST" ] && [ "$TRAVIS_RUST_VERSION" == "stable" ]; then cd $TRAVIS_BUILD_DIR-doc; fi
-  - if [ -n "$TRAVIS_PULL_REQUEST" ] && [ "$TRAVIS_RUST_VERSION" == "stable" ]; then git config --global user.email "nabijaczleweli@gmail.com" && git config --global user.name "Nabijaczleweli Autouploader Bot" && git config --global push.default simple; fi
-  - if [ -n "$TRAVIS_PULL_REQUEST" ] && [ "$TRAVIS_RUST_VERSION" == "stable" ]; then git add * && git commit -F $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG; fi
-  - if [ -n "$TRAVIS_PULL_REQUEST" ] && [ "$TRAVIS_RUST_VERSION" == "stable" ]; then git push && cd $TRAVIS_BUILD_DIR; fi
+  - if [ -n "$TRAVIS_PULL_REQUEST" ] && [ "$TRAVIS_RUST_VERSION" == "stable" ]; then
+      echo "Update docs for commits $TRAVIS_COMMIT_RANGE" > $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG
+      echo >> $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG
+      git log $TRAVIS_COMMIT_RANGE --pretty=oneline >> $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG
+      mkdir -p ~/.ssh && cp gh_rsa ~/.ssh/id_rsa && chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa
+      git clone -b doc git@github.com:nabijaczleweli/bidir-map-rs.git $TRAVIS_BUILD_DIR-doc
+      ln -s $TRAVIS_BUILD_DIR-doc target/doc
+      cargo doc
+      cd $TRAVIS_BUILD_DIR-doc
+      git config --global user.email "nabijaczleweli@gmail.com" && git config --global user.name "Nabijaczleweli Autouploader Bot" && git config --global push.default simple
+      git add * && git commit -F $TRAVIS_BUILD_DIR/../DOC_UPDATE_MSG
+      git push && cd $TRAVIS_BUILD_DIR
+    fi 
