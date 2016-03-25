@@ -210,19 +210,53 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 		self.cont.iter().any(|ref kvs| *key == kvs.1)
 	}
 
-	//TODO: implement get_mut
-	/*pub fn get_mut_by_first<Q>(&mut self, key: &Q) -> Option<&mut Kv2>
+	/// Returns a mutable reference to the second K/V corresponding to the first K/V.
+	///
+	/// # Examples
+	///
+	/// ```
+	/// use bidir_map::BidirMap;
+	///
+	/// let mut map = BidirMap::new();
+	/// map.insert(1, "a");
+	/// if let Some(x) = map.get_mut_by_first(&1) {
+	///     *x = "b";
+	/// }
+	/// assert_eq!(map.get_by_first(&1), Some(&"b"));
+	/// ```
+	pub fn get_mut_by_first<Q>(&mut self, key: &Q) -> Option<&mut Kv2>
 		where Kv1: Borrow<Q>,
 		      Q  : PartialEq<Kv1>,
 	{
-		self.cont.iter_mut().find(|&mut kvs| key == kvs.0).map(|&mut kvs| &mut kvs.1)
+		self.cont.iter().find(|ref kvs| *key == kvs.0).and_then(|ref kvs| {
+			Some(unsafe { &mut *(((&kvs.1) as *const Kv2) as *mut Kv2) })  // This *should* be safe, we're casting &Kv2 to &mut Kv2 from a mutable context
+			                                                               // Using mutables all the way wouldn't work for the life of me.
+		})
 	}
+
+	/// Returns a mutable reference to the first K/V corresponding to the second K/V.
+	///
+	/// # Examples
+	///
+	/// ```
+	/// use bidir_map::BidirMap;
+	///
+	/// let mut map = BidirMap::new();
+	/// map.insert(1, "a");
+	/// if let Some(x) = map.get_mut_by_second(&"a") {
+	///     *x = 2;
+	/// }
+	/// assert_eq!(map.get_by_second(&"a"), Some(&2));
+	/// ```
 	pub fn get_mut_by_second<Q>(&mut self, key: &Q) -> Option<&mut Kv1>
 		where Kv2: Borrow<Q>,
 		      Q  : PartialEq<Kv2>,
 	{
-		self.cont.iter_mut().find(|&mut kvs| key == kvs.1).map(|&mut kvs| &mut kvs.0)
-	}*/
+		self.cont.iter().find(|ref kvs| *key == kvs.1).and_then(|ref kvs| {
+			Some(unsafe { &mut *(((&kvs.0) as *const Kv1) as *mut Kv1) })  // This *should* be safe, we're casting &Kv1 to &mut Kv1 from a mutable context
+			                                                               // Using mutables all the way wouldn't work for the life of me.
+		})
+	}
 
 	/// Removes the pair corresponding to the first K/V from the map, returning it if the key was previously in the map.
 	///
