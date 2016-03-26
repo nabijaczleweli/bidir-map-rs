@@ -1,9 +1,33 @@
+//! Bidirectional maps for Rust.
+//!
+//! # Examples
+//!
+//! ```
+//! use bidir_map::BidirMap;
+//!
+//! let mut map = BidirMap::new();
+//! map.insert(1, "a");
+//! assert_eq!(map.get_by_first(&1), Some(&"a"));
+//! assert_eq!(map.get_by_first(&2), None);
+//! assert_eq!(map.get_by_second(&"a"), Some(&1));
+//! assert_eq!(map.get_by_second(&"b"), None);
+//! ```
+
+
 use std::borrow::Borrow;
 use std::slice;
 use std::iter::{Extend, FromIterator};
 use std::vec;
 
 
+/// A bidirectional map.
+///
+/// Bidirectional maps allow for mapping from and to both types.
+///
+/// The interface is based on that of `BTreeMap`, except, that for all functions, where one would supply a key, there are two functions,
+/// each treating one of the types as keys (`get()` -> `get_by_{first,second}()`).
+///
+/// Performance: `O(n)`, mostly.
 #[derive(Clone, Debug, Hash, PartialEq, Eq)]
 pub struct BidirMap<Kv1: PartialEq, Kv2: PartialEq> {
 	cont: Vec<(Kv1, Kv2)>,
@@ -99,7 +123,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 		self.cont.iter_mut()
 	}
 
-	//TODO: maybe implement keys() and values() as first_row() and second_row()?
+	//TODO: maybe implement keys() and values() as first_col() and second_col()?
 
 	/// Returns the number of elements in the map.
 	///
@@ -141,7 +165,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// ```
 	/// use bidir_map::BidirMap;
 	///
-	/// let mut map: BidirMap<i32, &'static str> = BidirMap::new();
+	/// let mut map = BidirMap::new();
 	/// map.insert(1, "a");
 	/// assert_eq!(map.get_by_first(&1), Some(&"a"));
 	/// assert_eq!(map.get_by_first(&2), None);
@@ -160,7 +184,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// ```
 	/// use bidir_map::BidirMap;
 	///
-	/// let mut map: BidirMap<i32, &'static str> = BidirMap::new();
+	/// let mut map = BidirMap::new();
 	/// map.insert(1, "a");
 	/// assert_eq!(map.get_by_second(&"a"), Some(&1));
 	/// assert_eq!(map.get_by_second(&"b"), None);
@@ -179,7 +203,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// ```
 	/// use bidir_map::BidirMap;
 	///
-	/// let mut map: BidirMap<i32, &'static str> = BidirMap::new();
+	/// let mut map = BidirMap::new();
 	/// map.insert(1, "a");
 	/// assert_eq!(map.contains_first_key(&1), true);
 	/// assert_eq!(map.contains_first_key(&2), false);
@@ -198,7 +222,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// ```
 	/// use bidir_map::BidirMap;
 	///
-	/// let mut map: BidirMap<i32, &'static str> = BidirMap::new();
+	/// let mut map = BidirMap::new();
 	/// map.insert(1, "a");
 	/// assert_eq!(map.contains_second_key(&"a"), true);
 	/// assert_eq!(map.contains_second_key(&"b"), false);

@@ -9,5 +9,5 @@ license = "MIT"
 # Remember to also update in appveyor.yml
 version = "0.1.0"
 authors = ["nabijaczleweli <nabijaczleweli@gmail.com>",
-           "Cat Plus Plus <piotrlegnica@piotrl.pl>"]
+           "Jake Goulding <jake.goulding@gmail.com>"]
 exclude = ["*.enc"]
