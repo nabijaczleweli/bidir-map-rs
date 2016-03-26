@@ -363,13 +363,61 @@
 <span id="320">320</span>
 <span id="321">321</span>
 <span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
 </pre><pre class='rust '>
+<span class='doccomment'>//! Bidirectional maps for Rust.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! # Examples</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! use bidir_map::BidirMap;</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! let mut map = BidirMap::new();</span>
+<span class='doccomment'>//! map.insert(1, &quot;a&quot;);</span>
+<span class='doccomment'>//! assert_eq!(map.get_by_first(&amp;1), Some(&amp;&quot;a&quot;));</span>
+<span class='doccomment'>//! assert_eq!(map.get_by_first(&amp;2), None);</span>
+<span class='doccomment'>//! assert_eq!(map.get_by_second(&amp;&quot;a&quot;), Some(&amp;1));</span>
+<span class='doccomment'>//! assert_eq!(map.get_by_second(&amp;&quot;b&quot;), None);</span>
+<span class='doccomment'>//! ```</span>
+
+
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Borrow</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::{<span class='ident'>Extend</span>, <span class='ident'>FromIterator</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>vec</span>;
 
 
+<span class='doccomment'>/// A bidirectional map.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Bidirectional maps allow for mapping from and to both types.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// The interface is based on that of `BTreeMap`, except, that for all functions, where one would supply a key, there are two functions,</span>
+<span class='doccomment'>/// each treating one of the types as keys (`get()` -&gt; `get_by_{first,second}()`).</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Performance: `O(n)`, mostly.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Debug</span>, <span class='ident'>Hash</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>BidirMap</span><span class='op'>&lt;</span><span class='ident'>Kv1</span>: <span class='ident'>PartialEq</span>, <span class='ident'>Kv2</span>: <span class='ident'>PartialEq</span><span class='op'>&gt;</span> {
 	<span class='ident'>cont</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span>(<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span>,
@@ -465,7 +513,7 @@
 		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter_mut</span>()
 	}
 
-	<span class='comment'>//TODO: maybe implement keys() and values() as first_row() and second_row()?</span>
+	<span class='comment'>//TODO: maybe implement keys() and values() as first_col() and second_col()?</span>
 
 	<span class='doccomment'>/// Returns the number of elements in the map.</span>
 	<span class='doccomment'>///</span>
@@ -507,7 +555,7 @@
 	<span class='doccomment'>/// ```</span>
 	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
 	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut map: BidirMap&lt;i32, &amp;&#39;static str&gt; = BidirMap::new();</span>
+	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
 	<span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
 	<span class='doccomment'>/// assert_eq!(map.get_by_first(&amp;1), Some(&amp;&quot;a&quot;));</span>
 	<span class='doccomment'>/// assert_eq!(map.get_by_first(&amp;2), None);</span>
@@ -526,7 +574,7 @@
 	<span class='doccomment'>/// ```</span>
 	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
 	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut map: BidirMap&lt;i32, &amp;&#39;static str&gt; = BidirMap::new();</span>
+	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
 	<span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
 	<span class='doccomment'>/// assert_eq!(map.get_by_second(&amp;&quot;a&quot;), Some(&amp;1));</span>
 	<span class='doccomment'>/// assert_eq!(map.get_by_second(&amp;&quot;b&quot;), None);</span>
@@ -545,7 +593,7 @@
 	<span class='doccomment'>/// ```</span>
 	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
 	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut map: BidirMap&lt;i32, &amp;&#39;static str&gt; = BidirMap::new();</span>
+	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
 	<span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
 	<span class='doccomment'>/// assert_eq!(map.contains_first_key(&amp;1), true);</span>
 	<span class='doccomment'>/// assert_eq!(map.contains_first_key(&amp;2), false);</span>
@@ -564,7 +612,7 @@
 	<span class='doccomment'>/// ```</span>
 	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
 	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut map: BidirMap&lt;i32, &amp;&#39;static str&gt; = BidirMap::new();</span>
+	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
 	<span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
 	<span class='doccomment'>/// assert_eq!(map.contains_second_key(&amp;&quot;a&quot;), true);</span>
 	<span class='doccomment'>/// assert_eq!(map.contains_second_key(&amp;&quot;b&quot;), false);</span>
