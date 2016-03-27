@@ -96,7 +96,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// let first = map.iter().next().unwrap();
 	/// assert_eq!(*first, (1, "a"));
 	/// ```
-	pub fn iter<'a>(&'a self) -> slice::Iter<'a, (Kv1, Kv2)> {
+	pub fn iter<'s>(&'s self) -> slice::Iter<'s, (Kv1, Kv2)> {
 		self.cont.iter()
 	}
 
@@ -119,11 +119,49 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// 	}
 	/// }
 	/// ```
-	pub fn iter_mut<'a>(&'a mut self) -> slice::IterMut<'a, (Kv1, Kv2)> {
+	pub fn iter_mut<'s>(&'s mut self) -> slice::IterMut<'s, (Kv1, Kv2)> {
 		self.cont.iter_mut()
 	}
 
-	//TODO: maybe implement keys() and values() as first_col() and second_col()?
+	/// Gets an iterator over the first K/V of the map.
+	///
+	/// # Examples
+	///
+	/// ```
+	/// use bidir_map::BidirMap;
+	///
+	/// let mut a = BidirMap::new();
+	/// a.insert(1, "a");
+	/// a.insert(2, "b");
+	///
+	/// let keys: Vec<_> = a.first_col().cloned().collect();
+	/// assert_eq!(keys, [1, 2]);
+	/// ```
+	pub fn first_col<'s>(&'s self) -> FirstColumn<'s, Kv1, Kv2> {
+		FirstColumn{
+			iter: self.cont.iter(),
+		}
+	}
+
+	/// Gets an iterator over the second K/V of the map.
+	///
+	/// # Examples
+	///
+	/// ```
+	/// use bidir_map::BidirMap;
+	///
+	/// let mut a = BidirMap::new();
+	/// a.insert(1, "a");
+	/// a.insert(2, "b");
+	///
+	/// let keys: Vec<_> = a.second_col().cloned().collect();
+	/// assert_eq!(keys, ["a", "b"]);
+	/// ```
+	pub fn second_col<'s>(&'s self) -> SecondColumn<'s, Kv1, Kv2> {
+		SecondColumn{
+			iter: self.cont.iter(),
+		}
+	}
 
 	/// Returns the number of elements in the map.
 	///
@@ -342,5 +380,29 @@ impl<Kv1: PartialEq, Kv2: PartialEq> FromIterator<(Kv1, Kv2)> for BidirMap<Kv1, 
 impl<Kv1: PartialEq, Kv2: PartialEq> Extend<(Kv1, Kv2)> for BidirMap<Kv1, Kv2> {
 	fn extend<T: IntoIterator<Item=(Kv1, Kv2)>>(&mut self, iter: T) {
 		self.cont.extend(iter)
+	}
+}
+
+
+pub struct FirstColumn<'a, Kv1: 'a, Kv2: 'a> {
+	iter: slice::Iter<'a, (Kv1, Kv2)>,
+}
+
+impl<'a, Kv1, Kv2> Iterator for FirstColumn<'a, Kv1, Kv2> {
+	type Item = &'a Kv1;
+	fn next(&mut self) -> Option<Self::Item> {
+		self.iter.next().map(|ref kvs| &kvs.0)
+	}
+}
+
+
+pub struct SecondColumn<'a, Kv1: 'a, Kv2: 'a> {
+	iter: slice::Iter<'a, (Kv1, Kv2)>,
+}
+
+impl<'a, Kv1, Kv2> Iterator for SecondColumn<'a, Kv1, Kv2> {
+	type Item = &'a Kv2;
+	fn next(&mut self) -> Option<Self::Item> {
+		self.iter.next().map(|ref kvs| &kvs.1)
 	}
 }
