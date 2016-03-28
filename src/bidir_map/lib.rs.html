@@ -387,6 +387,68 @@
 <span id="344">344</span>
 <span id="345">345</span>
 <span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Bidirectional maps for Rust.</span>
 <span class='doccomment'>//!</span>
@@ -486,7 +548,7 @@
 	<span class='doccomment'>/// let first = map.iter().next().unwrap();</span>
 	<span class='doccomment'>/// assert_eq!(*first, (1, &quot;a&quot;));</span>
 	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>slice</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, (<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span> {
+	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>slice</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span>, (<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span> {
 		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>()
 	}
 
@@ -509,11 +571,49 @@
 	<span class='doccomment'>/// 	}</span>
 	<span class='doccomment'>/// }</span>
 	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>slice</span>::<span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, (<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span> {
+	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>slice</span>::<span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span>, (<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span> {
 		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter_mut</span>()
 	}
 
-	<span class='comment'>//TODO: maybe implement keys() and values() as first_col() and second_col()?</span>
+	<span class='doccomment'>/// Gets an iterator over the first K/V of the map.</span>
+	<span class='doccomment'>///</span>
+	<span class='doccomment'>/// # Examples</span>
+	<span class='doccomment'>///</span>
+	<span class='doccomment'>/// ```</span>
+	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
+	<span class='doccomment'>///</span>
+	<span class='doccomment'>/// let mut a = BidirMap::new();</span>
+	<span class='doccomment'>/// a.insert(1, &quot;a&quot;);</span>
+	<span class='doccomment'>/// a.insert(2, &quot;b&quot;);</span>
+	<span class='doccomment'>///</span>
+	<span class='doccomment'>/// let keys: Vec&lt;_&gt; = a.first_col().cloned().collect();</span>
+	<span class='doccomment'>/// assert_eq!(keys, [1, 2]);</span>
+	<span class='doccomment'>/// ```</span>
+	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>first_col</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>FirstColumn</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
+		<span class='ident'>FirstColumn</span>{
+			<span class='ident'>iter</span>: <span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>(),
+		}
+	}
+
+	<span class='doccomment'>/// Gets an iterator over the second K/V of the map.</span>
+	<span class='doccomment'>///</span>
+	<span class='doccomment'>/// # Examples</span>
+	<span class='doccomment'>///</span>
+	<span class='doccomment'>/// ```</span>
+	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
+	<span class='doccomment'>///</span>
+	<span class='doccomment'>/// let mut a = BidirMap::new();</span>
+	<span class='doccomment'>/// a.insert(1, &quot;a&quot;);</span>
+	<span class='doccomment'>/// a.insert(2, &quot;b&quot;);</span>
+	<span class='doccomment'>///</span>
+	<span class='doccomment'>/// let keys: Vec&lt;_&gt; = a.second_col().cloned().collect();</span>
+	<span class='doccomment'>/// assert_eq!(keys, [&quot;a&quot;, &quot;b&quot;]);</span>
+	<span class='doccomment'>/// ```</span>
+	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>second_col</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>SecondColumn</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
+		<span class='ident'>SecondColumn</span>{
+			<span class='ident'>iter</span>: <span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>(),
+		}
+	}
 
 	<span class='doccomment'>/// Returns the number of elements in the map.</span>
 	<span class='doccomment'>///</span>
@@ -732,6 +832,30 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>Kv1</span>: <span class='ident'>PartialEq</span>, <span class='ident'>Kv2</span>: <span class='ident'>PartialEq</span><span class='op'>&gt;</span> <span class='ident'>Extend</span><span class='op'>&lt;</span>(<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>BidirMap</span><span class='op'>&lt;</span><span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
 	<span class='kw'>fn</span> <span class='ident'>extend</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span>(<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>iter</span>: <span class='ident'>T</span>) {
 		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>extend</span>(<span class='ident'>iter</span>)
+	}
+}
+
+
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FirstColumn</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>: <span class='lifetime'>&#39;a</span>, <span class='ident'>Kv2</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+	<span class='ident'>iter</span>: <span class='ident'>slice</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, (<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span>,
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>FirstColumn</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
+	<span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Kv1</span>;
+	<span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span> {
+		<span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>kvs</span>.<span class='number'>0</span>)
+	}
+}
+
+
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SecondColumn</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>: <span class='lifetime'>&#39;a</span>, <span class='ident'>Kv2</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+	<span class='ident'>iter</span>: <span class='ident'>slice</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, (<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span>,
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>SecondColumn</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
+	<span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Kv2</span>;
+	<span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span> {
+		<span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>kvs</span>.<span class='number'>1</span>)
 	}
 }
 </pre>

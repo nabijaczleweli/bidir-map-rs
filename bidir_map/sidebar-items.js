@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["BidirMap","A bidirectional map."]]});
+initSidebarItems({"struct":[["BidirMap","A bidirectional map."],["FirstColumn",""],["SecondColumn",""]]});
