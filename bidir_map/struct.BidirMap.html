@@ -75,7 +75,7 @@ each treating one of the types as keys (<code>get()</code> -&gt; <code>get_by_{f
 <p>If the map did not have this K/V-K/V pair present, <code>None</code> is returned.</p>
 
 <p>If the map did have this K/V-K/V pair present, it&#39;s updated and the old K/V-K/V pair is returned.</p>
-</div><h4 id='method.iter' class='method'><code>fn <a href='#method.iter' class='fnname'>iter</a>&lt;'s&gt;(&amp;'s self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/core/slice/struct.Iter.html' title='core::slice::Iter'>Iter</a>&lt;'s, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(Kv1, Kv2)</a>&gt;</code></h4>
+</div><h4 id='method.iter' class='method'><code>fn <a href='#method.iter' class='fnname'>iter</a>&lt;'s&gt;(&amp;'s self) -&gt; <a class='struct' href='../bidir_map/struct.Iter.html' title='bidir_map::Iter'>Iter</a>&lt;'s, Kv1, Kv2&gt;</code></h4>
 <div class='docblock'><p>Gets an iterator over the entries of the map.</p>
 
 <h1 id='examples-1' class='section-header'><a href='#examples-1'>Examples</a></h1><pre class='rust rust-example-rendered'>
@@ -92,7 +92,7 @@ each treating one of the types as keys (<code>get()</code> -&gt; <code>get_by_{f
 
 <span class='kw'>let</span> <span class='ident'>first</span> <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>iter</span>().<span class='ident'>next</span>().<span class='ident'>unwrap</span>();
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>first</span>, (<span class='number'>1</span>, <span class='string'>&quot;a&quot;</span>));</pre>
-</div><h4 id='method.iter_mut' class='method'><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>&lt;'s&gt;(&amp;'s mut self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/core/slice/struct.IterMut.html' title='core::slice::IterMut'>IterMut</a>&lt;'s, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(Kv1, Kv2)</a>&gt;</code></h4>
+</div><h4 id='method.iter_mut' class='method'><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>&lt;'s&gt;(&amp;'s mut self) -&gt; <a class='struct' href='../bidir_map/struct.IterMut.html' title='bidir_map::IterMut'>IterMut</a>&lt;'s, Kv1, Kv2&gt;</code></h4>
 <div class='docblock'><p>Gets a mutable iterator over the entries of the map.</p>
 
 <h1 id='examples-2' class='section-header'><a href='#examples-2'>Examples</a></h1><pre class='rust rust-example-rendered'>
