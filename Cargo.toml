@@ -7,7 +7,7 @@ readme = "README.md"
 keywords = ["bidir-map", "container", "bidirectional", "map"]
 license = "MIT"
 # Remember to also update in appveyor.yml
-version = "0.1.0"
+version = "0.2.0"
 authors = ["nabijaczleweli <nabijaczleweli@gmail.com>",
            "Jake Goulding <jake.goulding@gmail.com>"]
 exclude = ["*.enc"]
