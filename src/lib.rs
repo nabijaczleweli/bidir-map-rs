@@ -96,8 +96,10 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// let first = map.iter().next().unwrap();
 	/// assert_eq!(*first, (1, "a"));
 	/// ```
-	pub fn iter<'s>(&'s self) -> slice::Iter<'s, (Kv1, Kv2)> {
-		self.cont.iter()
+	pub fn iter<'s>(&'s self) -> Iter<'s, Kv1, Kv2> {
+		Iter{
+			iter: self.cont.iter(),
+		}
 	}
 
 	/// Gets a mutable iterator over the entries of the map.
@@ -119,8 +121,10 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// 	}
 	/// }
 	/// ```
-	pub fn iter_mut<'s>(&'s mut self) -> slice::IterMut<'s, (Kv1, Kv2)> {
-		self.cont.iter_mut()
+	pub fn iter_mut<'s>(&'s mut self) -> IterMut<'s, Kv1, Kv2> {
+		IterMut{
+			iter: self.cont.iter_mut(),
+		}
 	}
 
 	/// Gets an iterator over the first K/V of the map.
@@ -380,6 +384,30 @@ impl<Kv1: PartialEq, Kv2: PartialEq> FromIterator<(Kv1, Kv2)> for BidirMap<Kv1, 
 impl<Kv1: PartialEq, Kv2: PartialEq> Extend<(Kv1, Kv2)> for BidirMap<Kv1, Kv2> {
 	fn extend<T: IntoIterator<Item=(Kv1, Kv2)>>(&mut self, iter: T) {
 		self.cont.extend(iter)
+	}
+}
+
+
+pub struct Iter<'a, Kv1: 'a, Kv2: 'a> {
+	iter: slice::Iter<'a, (Kv1, Kv2)>,
+}
+
+impl<'a, Kv1, Kv2> Iterator for Iter<'a, Kv1, Kv2> {
+	type Item = &'a (Kv1, Kv2);
+	fn next(&mut self) -> Option<Self::Item> {
+		self.iter.next()
+	}
+}
+
+
+pub struct IterMut<'a, Kv1: 'a, Kv2: 'a> {
+	iter: slice::IterMut<'a, (Kv1, Kv2)>,
+}
+
+impl<'a, Kv1, Kv2> Iterator for IterMut<'a, Kv1, Kv2> {
+	type Item = &'a mut (Kv1, Kv2);
+	fn next(&mut self) -> Option<Self::Item> {
+		self.iter.next()
 	}
 }
 
