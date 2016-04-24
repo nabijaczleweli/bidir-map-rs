@@ -212,7 +212,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// assert_eq!(map.get_by_first(&1), Some(&"a"));
 	/// assert_eq!(map.get_by_first(&2), None);
 	/// ```
-	pub fn get_by_first<Q>(&self, key: &Q) -> Option<&Kv2>
+	pub fn get_by_first<Q: ?Sized>(&self, key: &Q) -> Option<&Kv2>
 		where Kv1: Borrow<Q>,
 		      Q  : PartialEq<Kv1>,
 	{
@@ -231,7 +231,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// assert_eq!(map.get_by_second(&"a"), Some(&1));
 	/// assert_eq!(map.get_by_second(&"b"), None);
 	/// ```
-	pub fn get_by_second<Q>(&self, key: &Q) -> Option<&Kv1>
+	pub fn get_by_second<Q: ?Sized>(&self, key: &Q) -> Option<&Kv1>
 		where Kv2: Borrow<Q>,
 		      Q  : PartialEq<Kv2>,
 	{
@@ -250,7 +250,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// assert_eq!(map.contains_first_key(&1), true);
 	/// assert_eq!(map.contains_first_key(&2), false);
 	/// ```
-	pub fn contains_first_key<Q>(&self, key: &Q) -> bool
+	pub fn contains_first_key<Q: ?Sized>(&self, key: &Q) -> bool
 		where Kv1: Borrow<Q>,
 		      Q  : PartialEq<Kv1>,
 	{
@@ -269,7 +269,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// assert_eq!(map.contains_second_key(&"a"), true);
 	/// assert_eq!(map.contains_second_key(&"b"), false);
 	/// ```
-	pub fn contains_second_key<Q>(&self, key: &Q) -> bool
+	pub fn contains_second_key<Q: ?Sized>(&self, key: &Q) -> bool
 		where Kv2: Borrow<Q>,
 		      Q  : PartialEq<Kv2>,
 	{
@@ -290,7 +290,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// }
 	/// assert_eq!(map.get_by_first(&1), Some(&"b"));
 	/// ```
-	pub fn get_mut_by_first<Q>(&mut self, key: &Q) -> Option<&mut Kv2>
+	pub fn get_mut_by_first<Q: ?Sized>(&mut self, key: &Q) -> Option<&mut Kv2>
 		where Kv1: Borrow<Q>,
 		      Q  : PartialEq<Kv1>,
 	{
@@ -314,7 +314,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// }
 	/// assert_eq!(map.get_by_second(&"a"), Some(&2));
 	/// ```
-	pub fn get_mut_by_second<Q>(&mut self, key: &Q) -> Option<&mut Kv1>
+	pub fn get_mut_by_second<Q: ?Sized>(&mut self, key: &Q) -> Option<&mut Kv1>
 		where Kv2: Borrow<Q>,
 		      Q  : PartialEq<Kv2>,
 	{
@@ -336,7 +336,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// assert_eq!(map.remove_by_first(&1), Some((1, "a")));
 	/// assert_eq!(map.remove_by_first(&1), None);
 	/// ```
-	pub fn remove_by_first<Q>(&mut self, key: &Q) -> Option<(Kv1, Kv2)>
+	pub fn remove_by_first<Q: ?Sized>(&mut self, key: &Q) -> Option<(Kv1, Kv2)>
 		where Kv1: Borrow<Q>,
 		      Q  : PartialEq<Kv1>,
 	{
@@ -355,7 +355,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// assert_eq!(map.remove_by_second(&"a"), Some((1, "a")));
 	/// assert_eq!(map.remove_by_second(&"b"), None);
 	/// ```
-	pub fn remove_by_second<Q>(&mut self, key: &Q) -> Option<(Kv1, Kv2)>
+	pub fn remove_by_second<Q: ?Sized>(&mut self, key: &Q) -> Option<(Kv1, Kv2)>
 		where Kv2: Borrow<Q>,
 		      Q  : PartialEq<Kv2>,
 	{

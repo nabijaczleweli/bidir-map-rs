@@ -9,5 +9,5 @@
 !gh_rsa.enc
 !src
 !src/**
-!examples
-!examples/**
+!tests
+!tests/**
