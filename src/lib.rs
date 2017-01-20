@@ -200,7 +200,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	}
 
 
-	/// Returns a reference to the first K/V corresponding to the second K/V.
+	/// Returns a reference to the second K/V corresponding to the first K/V.
 	///
 	/// # Examples
 	///
