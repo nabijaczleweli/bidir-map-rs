@@ -5,6 +5,7 @@ documentation = "https://cdn.rawgit.com/nabijaczleweli/bidir-map-rs/doc/bidir_ma
 repository = "https://github.com/nabijaczleweli/bidir-map-rs"
 readme = "README.md"
 keywords = ["bidir-map", "container", "bidirectional", "map"]
+categories = ["algorithms", "data-structures"]
 license = "MIT"
 # Remember to also update in appveyor.yml
 version = "0.3.1"
