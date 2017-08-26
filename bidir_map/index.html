@@ -9,6 +9,7 @@
 
     <title>bidir_map - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc mod">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'></p><script>window.sidebarCurrent = {name: 'bidir_map', ty: 'mod', relpath: '../'};</script>
+        <p class='location'>Crate bidir_map</p><div class="block items"><ul><li><a href="#structs">Structs</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'bidir_map', ty: 'mod', relpath: '../'};</script>
     </nav>
 
     <nav class="sub">
@@ -42,57 +43,57 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>bidir_map</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>bidir_map</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/bidir_map/src/lib.rs.html#1-436' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/bidir_map/lib.rs.html#1-430' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Bidirectional maps for Rust.</p>
 
 <h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
-<pre class='rust rust-example-rendered'>
-<span class='kw'>use</span> <span class='ident'>bidir_map</span>::<span class='ident'>BidirMap</span>;
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">bidir_map</span>::<span class="ident">BidirMap</span>;
 
-<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>BidirMap</span>::<span class='ident'>new</span>();
-<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='string'>&quot;a&quot;</span>);
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get_by_first</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>));
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get_by_first</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>), <span class='prelude-val'>None</span>);
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get_by_second</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;a&quot;</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>));
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>.<span class='ident'>get_by_second</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;b&quot;</span>), <span class='prelude-val'>None</span>);</pre>
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> <span class="ident">BidirMap</span>::<span class="ident">new</span>();
+<span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">1</span>, <span class="string">&quot;a&quot;</span>);
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">map</span>.<span class="ident">get_by_first</span>(<span class="kw-2">&amp;</span><span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">&quot;a&quot;</span>));
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">map</span>.<span class="ident">get_by_first</span>(<span class="kw-2">&amp;</span><span class="number">2</span>), <span class="prelude-val">None</span>);
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">map</span>.<span class="ident">get_by_second</span>(<span class="kw-2">&amp;</span><span class="string">&quot;a&quot;</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">1</span>));
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">map</span>.<span class="ident">get_by_second</span>(<span class="kw-2">&amp;</span><span class="string">&quot;b&quot;</span>), <span class="prelude-val">None</span>);</pre>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.BidirMap.html'
-                                  title='bidir_map::BidirMap'>BidirMap</a></td>
+                           <td><a class="struct" href="struct.BidirMap.html"
+                                  title='struct bidir_map::BidirMap'>BidirMap</a></td>
                            <td class='docblock-short'>
                                 <p>A bidirectional map.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.FirstColumn.html'
-                                  title='bidir_map::FirstColumn'>FirstColumn</a></td>
+                           <td><a class="struct" href="struct.FirstColumn.html"
+                                  title='struct bidir_map::FirstColumn'>FirstColumn</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Iter.html'
-                                  title='bidir_map::Iter'>Iter</a></td>
+                           <td><a class="struct" href="struct.Iter.html"
+                                  title='struct bidir_map::Iter'>Iter</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.IterMut.html'
-                                  title='bidir_map::IterMut'>IterMut</a></td>
+                           <td><a class="struct" href="struct.IterMut.html"
+                                  title='struct bidir_map::IterMut'>IterMut</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.SecondColumn.html'
-                                  title='bidir_map::SecondColumn'>SecondColumn</a></td>
+                           <td><a class="struct" href="struct.SecondColumn.html"
+                                  title='struct bidir_map::SecondColumn'>SecondColumn</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
@@ -153,7 +154,6 @@
         window.rootPath = "../";
         window.currentCrate = "bidir_map";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

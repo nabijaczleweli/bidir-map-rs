@@ -9,13 +9,15 @@
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -41,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -471,447 +473,435 @@
 <span id="428">428</span>
 <span id="429">429</span>
 <span id="430">430</span>
-<span id="431">431</span>
-<span id="432">432</span>
-<span id="433">433</span>
-<span id="434">434</span>
-<span id="435">435</span>
-<span id="436">436</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Bidirectional maps for Rust.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # Examples</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! use bidir_map::BidirMap;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let mut map = BidirMap::new();</span>
-<span class='doccomment'>//! map.insert(1, &quot;a&quot;);</span>
-<span class='doccomment'>//! assert_eq!(map.get_by_first(&amp;1), Some(&amp;&quot;a&quot;));</span>
-<span class='doccomment'>//! assert_eq!(map.get_by_first(&amp;2), None);</span>
-<span class='doccomment'>//! assert_eq!(map.get_by_second(&amp;&quot;a&quot;), Some(&amp;1));</span>
-<span class='doccomment'>//! assert_eq!(map.get_by_second(&amp;&quot;b&quot;), None);</span>
-<span class='doccomment'>//! ```</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Bidirectional maps for Rust.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Examples</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! use bidir_map::BidirMap;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let mut map = BidirMap::new();</span>
+<span class="doccomment">//! map.insert(1, &quot;a&quot;);</span>
+<span class="doccomment">//! assert_eq!(map.get_by_first(&amp;1), Some(&amp;&quot;a&quot;));</span>
+<span class="doccomment">//! assert_eq!(map.get_by_first(&amp;2), None);</span>
+<span class="doccomment">//! assert_eq!(map.get_by_second(&amp;&quot;a&quot;), Some(&amp;1));</span>
+<span class="doccomment">//! assert_eq!(map.get_by_second(&amp;&quot;b&quot;), None);</span>
+<span class="doccomment">//! ```</span>
 
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Borrow</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::{<span class='ident'>Extend</span>, <span class='ident'>FromIterator</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>vec</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Borrow</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">slice</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>::{<span class="ident">Extend</span>, <span class="ident">FromIterator</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">vec</span>;
 
 
-<span class='doccomment'>/// A bidirectional map.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Bidirectional maps allow for mapping from and to both types.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The interface is based on that of `BTreeMap`, except, that for all functions, where one would supply a key, there are two functions,</span>
-<span class='doccomment'>/// each treating one of the types as keys (`get()` -&gt; `get_by_{first,second}()`).</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Performance: `O(n)`, mostly.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Debug</span>, <span class='ident'>Hash</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>BidirMap</span><span class='op'>&lt;</span><span class='ident'>Kv1</span>: <span class='ident'>PartialEq</span>, <span class='ident'>Kv2</span>: <span class='ident'>PartialEq</span><span class='op'>&gt;</span> {
-	<span class='ident'>cont</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span>(<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span>,
+<span class="doccomment">/// A bidirectional map.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Bidirectional maps allow for mapping from and to both types.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The interface is based on that of `BTreeMap`, except, that for all functions, where one would supply a key, there are two functions,</span>
+<span class="doccomment">/// each treating one of the types as keys (`get()` -&gt; `get_by_{first,second}()`).</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Performance: `O(n)`, mostly.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BidirMap</span><span class="op">&lt;</span><span class="ident">Kv1</span>: <span class="ident">PartialEq</span>, <span class="ident">Kv2</span>: <span class="ident">PartialEq</span><span class="op">&gt;</span> {
+	<span class="ident">cont</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Kv1</span>, <span class="ident">Kv2</span>)<span class="op">&gt;</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>Kv1</span>: <span class='ident'>PartialEq</span>, <span class='ident'>Kv2</span>: <span class='ident'>PartialEq</span><span class='op'>&gt;</span> <span class='ident'>BidirMap</span><span class='op'>&lt;</span><span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
-	<span class='doccomment'>/// Create a new empty instance of `BidirMap`</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
-		<span class='ident'>BidirMap</span>{
-			<span class='ident'>cont</span>: <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Kv1</span>: <span class="ident">PartialEq</span>, <span class="ident">Kv2</span>: <span class="ident">PartialEq</span><span class="op">&gt;</span> <span class="ident">BidirMap</span><span class="op">&lt;</span><span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Create a new empty instance of `BidirMap`</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="self">Self</span> {
+		<span class="ident">BidirMap</span>{
+			<span class="ident">cont</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
 		}
 	}
 
-	<span class='doccomment'>/// Clears the map, removing all entries.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// # Examples</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut a = BidirMap::new();</span>
-	<span class='doccomment'>/// a.insert(1, &quot;a&quot;);</span>
-	<span class='doccomment'>/// a.clear();</span>
-	<span class='doccomment'>/// assert!(a.is_empty());</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clear</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>clear</span>()
+	<span class="doccomment">/// Clears the map, removing all entries.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// # Examples</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// ```</span>
+	<span class="doccomment">/// use bidir_map::BidirMap;</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let mut a = BidirMap::new();</span>
+	<span class="doccomment">/// a.insert(1, &quot;a&quot;);</span>
+	<span class="doccomment">/// a.clear();</span>
+	<span class="doccomment">/// assert!(a.is_empty());</span>
+	<span class="doccomment">/// ```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clear</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+		<span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">clear</span>()
 	}
 
-	<span class='doccomment'>/// Inserts a K/V-K/V pair into the map.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// If the map did not have this K/V-K/V pair present, `None` is returned.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// If the map did have this K/V-K/V pair present, it&#39;s updated and the old K/V-K/V pair is returned.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>kv1</span>: <span class='ident'>Kv1</span>, <span class='ident'>kv2</span>: <span class='ident'>Kv2</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span> {
-		<span class='kw'>let</span> <span class='ident'>retval</span> <span class='op'>=</span>
-			<span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>contains_first_key</span>(<span class='kw-2'>&amp;</span><span class='ident'>kv1</span>) {
-				<span class='self'>self</span>.<span class='ident'>remove_by_first</span>(<span class='kw-2'>&amp;</span><span class='ident'>kv1</span>)
-			} <span class='kw'>else</span> <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>contains_second_key</span>(<span class='kw-2'>&amp;</span><span class='ident'>kv2</span>) {
-				<span class='self'>self</span>.<span class='ident'>remove_by_second</span>(<span class='kw-2'>&amp;</span><span class='ident'>kv2</span>)
-			} <span class='kw'>else</span> {
-				<span class='prelude-val'>None</span>
+	<span class="doccomment">/// Inserts a K/V-K/V pair into the map.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// If the map did not have this K/V-K/V pair present, `None` is returned.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// If the map did have this K/V-K/V pair present, it&#39;s updated and the old K/V-K/V pair is returned.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insert</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">kv1</span>: <span class="ident">Kv1</span>, <span class="ident">kv2</span>: <span class="ident">Kv2</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">Kv1</span>, <span class="ident">Kv2</span>)<span class="op">&gt;</span> {
+		<span class="kw">let</span> <span class="ident">retval</span> <span class="op">=</span>
+			<span class="kw">if</span> <span class="self">self</span>.<span class="ident">contains_first_key</span>(<span class="kw-2">&amp;</span><span class="ident">kv1</span>) {
+				<span class="self">self</span>.<span class="ident">remove_by_first</span>(<span class="kw-2">&amp;</span><span class="ident">kv1</span>)
+			} <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">contains_second_key</span>(<span class="kw-2">&amp;</span><span class="ident">kv2</span>) {
+				<span class="self">self</span>.<span class="ident">remove_by_second</span>(<span class="kw-2">&amp;</span><span class="ident">kv2</span>)
+			} <span class="kw">else</span> {
+				<span class="prelude-val">None</span>
 			};
 
-		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>push</span>((<span class='ident'>kv1</span>, <span class='ident'>kv2</span>));
+		<span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">push</span>((<span class="ident">kv1</span>, <span class="ident">kv2</span>));
 
-		<span class='ident'>retval</span>
+		<span class="ident">retval</span>
 	}
 
-	<span class='doccomment'>/// Gets an iterator over the entries of the map.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// # Examples</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
-	<span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
-	<span class='doccomment'>/// map.insert(2, &quot;b&quot;);</span>
-	<span class='doccomment'>/// map.insert(3, &quot;c&quot;);</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// for kv in map.iter() {</span>
-	<span class='doccomment'>/// 	println!(&quot;{}: {}&quot;, kv.0, kv.1);</span>
-	<span class='doccomment'>/// }</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let first = map.iter().next().unwrap();</span>
-	<span class='doccomment'>/// assert_eq!(*first, (1, &quot;a&quot;));</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
-		<span class='ident'>Iter</span>{
-			<span class='ident'>iter</span>: <span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>(),
+	<span class="doccomment">/// Gets an iterator over the entries of the map.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// # Examples</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// ```</span>
+	<span class="doccomment">/// use bidir_map::BidirMap;</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let mut map = BidirMap::new();</span>
+	<span class="doccomment">/// map.insert(1, &quot;a&quot;);</span>
+	<span class="doccomment">/// map.insert(2, &quot;b&quot;);</span>
+	<span class="doccomment">/// map.insert(3, &quot;c&quot;);</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// for kv in map.iter() {</span>
+	<span class="doccomment">/// 	println!(&quot;{}: {}&quot;, kv.0, kv.1);</span>
+	<span class="doccomment">/// }</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let first = map.iter().next().unwrap();</span>
+	<span class="doccomment">/// assert_eq!(*first, (1, &quot;a&quot;));</span>
+	<span class="doccomment">/// ```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">iter</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> {
+		<span class="ident">Iter</span>{
+			<span class="ident">iter</span>: <span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">iter</span>(),
 		}
 	}
 
-	<span class='doccomment'>/// Gets a mutable iterator over the entries of the map.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// # Examples</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
-	<span class='doccomment'>/// map.insert(&quot;a&quot;, 1);</span>
-	<span class='doccomment'>/// map.insert(&quot;b&quot;, 2);</span>
-	<span class='doccomment'>/// map.insert(&quot;c&quot;, 3);</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// // add 10 to the value if the key isn&#39;t &quot;a&quot;</span>
-	<span class='doccomment'>/// for kv in map.iter_mut() {</span>
-	<span class='doccomment'>/// 	if &amp;kv.0 != &amp;&quot;a&quot; {</span>
-	<span class='doccomment'>/// 		kv.1 += 10;</span>
-	<span class='doccomment'>/// 	}</span>
-	<span class='doccomment'>/// }</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
-		<span class='ident'>IterMut</span>{
-			<span class='ident'>iter</span>: <span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter_mut</span>(),
+	<span class="doccomment">/// Gets a mutable iterator over the entries of the map.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// # Examples</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// ```</span>
+	<span class="doccomment">/// use bidir_map::BidirMap;</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let mut map = BidirMap::new();</span>
+	<span class="doccomment">/// map.insert(&quot;a&quot;, 1);</span>
+	<span class="doccomment">/// map.insert(&quot;b&quot;, 2);</span>
+	<span class="doccomment">/// map.insert(&quot;c&quot;, 3);</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// // add 10 to the value if the key isn&#39;t &quot;a&quot;</span>
+	<span class="doccomment">/// for kv in map.iter_mut() {</span>
+	<span class="doccomment">/// 	if &amp;kv.0 != &amp;&quot;a&quot; {</span>
+	<span class="doccomment">/// 		kv.1 += 10;</span>
+	<span class="doccomment">/// 	}</span>
+	<span class="doccomment">/// }</span>
+	<span class="doccomment">/// ```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">iter_mut</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">IterMut</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> {
+		<span class="ident">IterMut</span>{
+			<span class="ident">iter</span>: <span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">iter_mut</span>(),
 		}
 	}
 
-	<span class='doccomment'>/// Gets an iterator over the first K/V of the map.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// # Examples</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut a = BidirMap::new();</span>
-	<span class='doccomment'>/// a.insert(1, &quot;a&quot;);</span>
-	<span class='doccomment'>/// a.insert(2, &quot;b&quot;);</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let keys: Vec&lt;_&gt; = a.first_col().cloned().collect();</span>
-	<span class='doccomment'>/// assert_eq!(keys, [1, 2]);</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>first_col</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>FirstColumn</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
-		<span class='ident'>FirstColumn</span>{
-			<span class='ident'>iter</span>: <span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>(),
+	<span class="doccomment">/// Gets an iterator over the first K/V of the map.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// # Examples</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// ```</span>
+	<span class="doccomment">/// use bidir_map::BidirMap;</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let mut a = BidirMap::new();</span>
+	<span class="doccomment">/// a.insert(1, &quot;a&quot;);</span>
+	<span class="doccomment">/// a.insert(2, &quot;b&quot;);</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let keys: Vec&lt;_&gt; = a.first_col().cloned().collect();</span>
+	<span class="doccomment">/// assert_eq!(keys, [1, 2]);</span>
+	<span class="doccomment">/// ```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">first_col</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FirstColumn</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> {
+		<span class="ident">FirstColumn</span>{
+			<span class="ident">iter</span>: <span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">iter</span>(),
 		}
 	}
 
-	<span class='doccomment'>/// Gets an iterator over the second K/V of the map.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// # Examples</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut a = BidirMap::new();</span>
-	<span class='doccomment'>/// a.insert(1, &quot;a&quot;);</span>
-	<span class='doccomment'>/// a.insert(2, &quot;b&quot;);</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let keys: Vec&lt;_&gt; = a.second_col().cloned().collect();</span>
-	<span class='doccomment'>/// assert_eq!(keys, [&quot;a&quot;, &quot;b&quot;]);</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>second_col</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>SecondColumn</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
-		<span class='ident'>SecondColumn</span>{
-			<span class='ident'>iter</span>: <span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>(),
+	<span class="doccomment">/// Gets an iterator over the second K/V of the map.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// # Examples</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// ```</span>
+	<span class="doccomment">/// use bidir_map::BidirMap;</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let mut a = BidirMap::new();</span>
+	<span class="doccomment">/// a.insert(1, &quot;a&quot;);</span>
+	<span class="doccomment">/// a.insert(2, &quot;b&quot;);</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let keys: Vec&lt;_&gt; = a.second_col().cloned().collect();</span>
+	<span class="doccomment">/// assert_eq!(keys, [&quot;a&quot;, &quot;b&quot;]);</span>
+	<span class="doccomment">/// ```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">second_col</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">SecondColumn</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> {
+		<span class="ident">SecondColumn</span>{
+			<span class="ident">iter</span>: <span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">iter</span>(),
 		}
 	}
 
-	<span class='doccomment'>/// Returns the number of elements in the map.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// # Examples</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut a = BidirMap::new();</span>
-	<span class='doccomment'>/// assert_eq!(a.len(), 0);</span>
-	<span class='doccomment'>/// a.insert(1, &quot;a&quot;);</span>
-	<span class='doccomment'>/// assert_eq!(a.len(), 1);</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>len</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>len</span>()
+	<span class="doccomment">/// Returns the number of elements in the map.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// # Examples</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// ```</span>
+	<span class="doccomment">/// use bidir_map::BidirMap;</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let mut a = BidirMap::new();</span>
+	<span class="doccomment">/// assert_eq!(a.len(), 0);</span>
+	<span class="doccomment">/// a.insert(1, &quot;a&quot;);</span>
+	<span class="doccomment">/// assert_eq!(a.len(), 1);</span>
+	<span class="doccomment">/// ```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+		<span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">len</span>()
 	}
 
-	<span class='doccomment'>/// Returns true if the map contains no elements.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// # Examples</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut a = BidirMap::new();</span>
-	<span class='doccomment'>/// assert!(a.is_empty());</span>
-	<span class='doccomment'>/// a.insert(1, &quot;a&quot;);</span>
-	<span class='doccomment'>/// assert!(!a.is_empty());</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_empty</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>is_empty</span>()
+	<span class="doccomment">/// Returns true if the map contains no elements.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// # Examples</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// ```</span>
+	<span class="doccomment">/// use bidir_map::BidirMap;</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let mut a = BidirMap::new();</span>
+	<span class="doccomment">/// assert!(a.is_empty());</span>
+	<span class="doccomment">/// a.insert(1, &quot;a&quot;);</span>
+	<span class="doccomment">/// assert!(!a.is_empty());</span>
+	<span class="doccomment">/// ```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+		<span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">is_empty</span>()
 	}
 
 
-	<span class='doccomment'>/// Returns a reference to the first K/V corresponding to the second K/V.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// # Examples</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
-	<span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
-	<span class='doccomment'>/// assert_eq!(map.get_by_first(&amp;1), Some(&amp;&quot;a&quot;));</span>
-	<span class='doccomment'>/// assert_eq!(map.get_by_first(&amp;2), None);</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_by_first</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>Q</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Kv2</span><span class='op'>&gt;</span>
-		<span class='kw'>where</span> <span class='ident'>Kv1</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>,
-		      <span class='ident'>Q</span>  : <span class='ident'>PartialEq</span><span class='op'>&lt;</span><span class='ident'>Kv1</span><span class='op'>&gt;</span>,
+	<span class="doccomment">/// Returns a reference to the second K/V corresponding to the first K/V.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// # Examples</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// ```</span>
+	<span class="doccomment">/// use bidir_map::BidirMap;</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let mut map = BidirMap::new();</span>
+	<span class="doccomment">/// map.insert(1, &quot;a&quot;);</span>
+	<span class="doccomment">/// assert_eq!(map.get_by_first(&amp;1), Some(&amp;&quot;a&quot;));</span>
+	<span class="doccomment">/// assert_eq!(map.get_by_first(&amp;2), None);</span>
+	<span class="doccomment">/// ```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_by_first</span><span class="op">&lt;</span><span class="ident">Q</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">Q</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Kv2</span><span class="op">&gt;</span>
+		<span class="kw">where</span> <span class="ident">Kv1</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span>,
+		      <span class="ident">Q</span>  : <span class="ident">PartialEq</span><span class="op">&lt;</span><span class="ident">Kv1</span><span class="op">&gt;</span>,
 	{
-		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>().<span class='ident'>find</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>kvs</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>key</span> <span class='op'>==</span> <span class='ident'>kvs</span>.<span class='number'>0</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>kvs</span>.<span class='number'>1</span>)
+		<span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">kvs</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">key</span> <span class="op">==</span> <span class="ident">kvs</span>.<span class="number">0</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">ref</span> <span class="ident">kvs</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">kvs</span>.<span class="number">1</span>)
 	}
 
-	<span class='doccomment'>/// Returns a reference to the first K/V corresponding to the second K/V.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// # Examples</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
-	<span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
-	<span class='doccomment'>/// assert_eq!(map.get_by_second(&amp;&quot;a&quot;), Some(&amp;1));</span>
-	<span class='doccomment'>/// assert_eq!(map.get_by_second(&amp;&quot;b&quot;), None);</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_by_second</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>Q</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Kv1</span><span class='op'>&gt;</span>
-		<span class='kw'>where</span> <span class='ident'>Kv2</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>,
-		      <span class='ident'>Q</span>  : <span class='ident'>PartialEq</span><span class='op'>&lt;</span><span class='ident'>Kv2</span><span class='op'>&gt;</span>,
+	<span class="doccomment">/// Returns a reference to the first K/V corresponding to the second K/V.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// # Examples</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// ```</span>
+	<span class="doccomment">/// use bidir_map::BidirMap;</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let mut map = BidirMap::new();</span>
+	<span class="doccomment">/// map.insert(1, &quot;a&quot;);</span>
+	<span class="doccomment">/// assert_eq!(map.get_by_second(&amp;&quot;a&quot;), Some(&amp;1));</span>
+	<span class="doccomment">/// assert_eq!(map.get_by_second(&amp;&quot;b&quot;), None);</span>
+	<span class="doccomment">/// ```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_by_second</span><span class="op">&lt;</span><span class="ident">Q</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">Q</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Kv1</span><span class="op">&gt;</span>
+		<span class="kw">where</span> <span class="ident">Kv2</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span>,
+		      <span class="ident">Q</span>  : <span class="ident">PartialEq</span><span class="op">&lt;</span><span class="ident">Kv2</span><span class="op">&gt;</span>,
 	{
-		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>().<span class='ident'>find</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>kvs</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>key</span> <span class='op'>==</span> <span class='ident'>kvs</span>.<span class='number'>1</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>kvs</span>.<span class='number'>0</span>)
+		<span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">kvs</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">key</span> <span class="op">==</span> <span class="ident">kvs</span>.<span class="number">1</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">ref</span> <span class="ident">kvs</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">kvs</span>.<span class="number">0</span>)
 	}
 
-	<span class='doccomment'>/// Check if the map contains the first K/V</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// # Examples</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
-	<span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
-	<span class='doccomment'>/// assert_eq!(map.contains_first_key(&amp;1), true);</span>
-	<span class='doccomment'>/// assert_eq!(map.contains_first_key(&amp;2), false);</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>contains_first_key</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>Q</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>
-		<span class='kw'>where</span> <span class='ident'>Kv1</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>,
-		      <span class='ident'>Q</span>  : <span class='ident'>PartialEq</span><span class='op'>&lt;</span><span class='ident'>Kv1</span><span class='op'>&gt;</span>,
+	<span class="doccomment">/// Check if the map contains the first K/V</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// # Examples</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// ```</span>
+	<span class="doccomment">/// use bidir_map::BidirMap;</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let mut map = BidirMap::new();</span>
+	<span class="doccomment">/// map.insert(1, &quot;a&quot;);</span>
+	<span class="doccomment">/// assert_eq!(map.contains_first_key(&amp;1), true);</span>
+	<span class="doccomment">/// assert_eq!(map.contains_first_key(&amp;2), false);</span>
+	<span class="doccomment">/// ```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains_first_key</span><span class="op">&lt;</span><span class="ident">Q</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">Q</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>
+		<span class="kw">where</span> <span class="ident">Kv1</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span>,
+		      <span class="ident">Q</span>  : <span class="ident">PartialEq</span><span class="op">&lt;</span><span class="ident">Kv1</span><span class="op">&gt;</span>,
 	{
-		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>().<span class='ident'>any</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>key</span> <span class='op'>==</span> <span class='ident'>kvs</span>.<span class='number'>0</span>)
+		<span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">ref</span> <span class="ident">kvs</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">key</span> <span class="op">==</span> <span class="ident">kvs</span>.<span class="number">0</span>)
 	}
 
-	<span class='doccomment'>/// Check if the map contains the second K/V</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// # Examples</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
-	<span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
-	<span class='doccomment'>/// assert_eq!(map.contains_second_key(&amp;&quot;a&quot;), true);</span>
-	<span class='doccomment'>/// assert_eq!(map.contains_second_key(&amp;&quot;b&quot;), false);</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>contains_second_key</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>Q</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>
-		<span class='kw'>where</span> <span class='ident'>Kv2</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>,
-		      <span class='ident'>Q</span>  : <span class='ident'>PartialEq</span><span class='op'>&lt;</span><span class='ident'>Kv2</span><span class='op'>&gt;</span>,
+	<span class="doccomment">/// Check if the map contains the second K/V</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// # Examples</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// ```</span>
+	<span class="doccomment">/// use bidir_map::BidirMap;</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let mut map = BidirMap::new();</span>
+	<span class="doccomment">/// map.insert(1, &quot;a&quot;);</span>
+	<span class="doccomment">/// assert_eq!(map.contains_second_key(&amp;&quot;a&quot;), true);</span>
+	<span class="doccomment">/// assert_eq!(map.contains_second_key(&amp;&quot;b&quot;), false);</span>
+	<span class="doccomment">/// ```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains_second_key</span><span class="op">&lt;</span><span class="ident">Q</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">Q</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>
+		<span class="kw">where</span> <span class="ident">Kv2</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span>,
+		      <span class="ident">Q</span>  : <span class="ident">PartialEq</span><span class="op">&lt;</span><span class="ident">Kv2</span><span class="op">&gt;</span>,
 	{
-		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>().<span class='ident'>any</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>key</span> <span class='op'>==</span> <span class='ident'>kvs</span>.<span class='number'>1</span>)
+		<span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">ref</span> <span class="ident">kvs</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">key</span> <span class="op">==</span> <span class="ident">kvs</span>.<span class="number">1</span>)
 	}
 
-	<span class='doccomment'>/// Returns a mutable reference to the second K/V corresponding to the first K/V.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// # Examples</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
-	<span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
-	<span class='doccomment'>/// if let Some(x) = map.get_mut_by_first(&amp;1) {</span>
-	<span class='doccomment'>///     *x = &quot;b&quot;;</span>
-	<span class='doccomment'>/// }</span>
-	<span class='doccomment'>/// assert_eq!(map.get_by_first(&amp;1), Some(&amp;&quot;b&quot;));</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut_by_first</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>Q</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Kv2</span><span class='op'>&gt;</span>
-		<span class='kw'>where</span> <span class='ident'>Kv1</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>,
-		      <span class='ident'>Q</span>  : <span class='ident'>PartialEq</span><span class='op'>&lt;</span><span class='ident'>Kv1</span><span class='op'>&gt;</span>,
+	<span class="doccomment">/// Returns a mutable reference to the second K/V corresponding to the first K/V.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// # Examples</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// ```</span>
+	<span class="doccomment">/// use bidir_map::BidirMap;</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let mut map = BidirMap::new();</span>
+	<span class="doccomment">/// map.insert(1, &quot;a&quot;);</span>
+	<span class="doccomment">/// if let Some(x) = map.get_mut_by_first(&amp;1) {</span>
+	<span class="doccomment">///     *x = &quot;b&quot;;</span>
+	<span class="doccomment">/// }</span>
+	<span class="doccomment">/// assert_eq!(map.get_by_first(&amp;1), Some(&amp;&quot;b&quot;));</span>
+	<span class="doccomment">/// ```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut_by_first</span><span class="op">&lt;</span><span class="ident">Q</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">Q</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Kv2</span><span class="op">&gt;</span>
+		<span class="kw">where</span> <span class="ident">Kv1</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span>,
+		      <span class="ident">Q</span>  : <span class="ident">PartialEq</span><span class="op">&lt;</span><span class="ident">Kv1</span><span class="op">&gt;</span>,
 	{
-		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>().<span class='ident'>find</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>key</span> <span class='op'>==</span> <span class='ident'>kvs</span>.<span class='number'>0</span>).<span class='ident'>and_then</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> {
-			<span class='prelude-val'>Some</span>(<span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span>(((<span class='kw-2'>&amp;</span><span class='ident'>kvs</span>.<span class='number'>1</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Kv2</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Kv2</span>) })  <span class='comment'>// This *should* be safe, we&#39;re casting &amp;Kv2 to &amp;mut Kv2 from a mutable context</span>
-			                                                               <span class='comment'>// Using mutables all the way wouldn&#39;t work for the life of me.</span>
-		})
+		<span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">iter_mut</span>().<span class="ident">find</span>(<span class="op">|</span><span class="kw-2">ref</span> <span class="ident">kvs</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">key</span> <span class="op">==</span> <span class="ident">kvs</span>.<span class="number">0</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> (_, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">kv2</span>)<span class="op">|</span> <span class="ident">kv2</span>)
 	}
 
-	<span class='doccomment'>/// Returns a mutable reference to the first K/V corresponding to the second K/V.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// # Examples</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
-	<span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
-	<span class='doccomment'>/// if let Some(x) = map.get_mut_by_second(&amp;&quot;a&quot;) {</span>
-	<span class='doccomment'>///     *x = 2;</span>
-	<span class='doccomment'>/// }</span>
-	<span class='doccomment'>/// assert_eq!(map.get_by_second(&amp;&quot;a&quot;), Some(&amp;2));</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut_by_second</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>Q</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Kv1</span><span class='op'>&gt;</span>
-		<span class='kw'>where</span> <span class='ident'>Kv2</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>,
-		      <span class='ident'>Q</span>  : <span class='ident'>PartialEq</span><span class='op'>&lt;</span><span class='ident'>Kv2</span><span class='op'>&gt;</span>,
+	<span class="doccomment">/// Returns a mutable reference to the first K/V corresponding to the second K/V.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// # Examples</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// ```</span>
+	<span class="doccomment">/// use bidir_map::BidirMap;</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let mut map = BidirMap::new();</span>
+	<span class="doccomment">/// map.insert(1, &quot;a&quot;);</span>
+	<span class="doccomment">/// if let Some(x) = map.get_mut_by_second(&amp;&quot;a&quot;) {</span>
+	<span class="doccomment">///     *x = 2;</span>
+	<span class="doccomment">/// }</span>
+	<span class="doccomment">/// assert_eq!(map.get_by_second(&amp;&quot;a&quot;), Some(&amp;2));</span>
+	<span class="doccomment">/// ```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut_by_second</span><span class="op">&lt;</span><span class="ident">Q</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">Q</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Kv1</span><span class="op">&gt;</span>
+		<span class="kw">where</span> <span class="ident">Kv2</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span>,
+		      <span class="ident">Q</span>  : <span class="ident">PartialEq</span><span class="op">&lt;</span><span class="ident">Kv2</span><span class="op">&gt;</span>,
 	{
-		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>().<span class='ident'>find</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>key</span> <span class='op'>==</span> <span class='ident'>kvs</span>.<span class='number'>1</span>).<span class='ident'>and_then</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> {
-			<span class='prelude-val'>Some</span>(<span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span>(((<span class='kw-2'>&amp;</span><span class='ident'>kvs</span>.<span class='number'>0</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Kv1</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Kv1</span>) })  <span class='comment'>// This *should* be safe, we&#39;re casting &amp;Kv1 to &amp;mut Kv1 from a mutable context</span>
-			                                                               <span class='comment'>// Using mutables all the way wouldn&#39;t work for the life of me.</span>
-		})
+		<span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">iter_mut</span>().<span class="ident">find</span>(<span class="op">|</span><span class="kw-2">ref</span> <span class="ident">kvs</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">key</span> <span class="op">==</span> <span class="ident">kvs</span>.<span class="number">1</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> (<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">kv1</span>, _)<span class="op">|</span> <span class="ident">kv1</span>)
 	}
 
-	<span class='doccomment'>/// Removes the pair corresponding to the first K/V from the map, returning it if the key was previously in the map.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// # Examples</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
-	<span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
-	<span class='doccomment'>/// assert_eq!(map.remove_by_first(&amp;1), Some((1, &quot;a&quot;)));</span>
-	<span class='doccomment'>/// assert_eq!(map.remove_by_first(&amp;1), None);</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>remove_by_first</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>Q</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span>
-		<span class='kw'>where</span> <span class='ident'>Kv1</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>,
-		      <span class='ident'>Q</span>  : <span class='ident'>PartialEq</span><span class='op'>&lt;</span><span class='ident'>Kv1</span><span class='op'>&gt;</span>,
+	<span class="doccomment">/// Removes the pair corresponding to the first K/V from the map, returning it if the key was previously in the map.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// # Examples</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// ```</span>
+	<span class="doccomment">/// use bidir_map::BidirMap;</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let mut map = BidirMap::new();</span>
+	<span class="doccomment">/// map.insert(1, &quot;a&quot;);</span>
+	<span class="doccomment">/// assert_eq!(map.remove_by_first(&amp;1), Some((1, &quot;a&quot;)));</span>
+	<span class="doccomment">/// assert_eq!(map.remove_by_first(&amp;1), None);</span>
+	<span class="doccomment">/// ```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_by_first</span><span class="op">&lt;</span><span class="ident">Q</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">Q</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">Kv1</span>, <span class="ident">Kv2</span>)<span class="op">&gt;</span>
+		<span class="kw">where</span> <span class="ident">Kv1</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span>,
+		      <span class="ident">Q</span>  : <span class="ident">PartialEq</span><span class="op">&lt;</span><span class="ident">Kv1</span><span class="op">&gt;</span>,
 	{
-		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>().<span class='ident'>position</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>key</span> <span class='op'>==</span> <span class='ident'>kvs</span>.<span class='number'>0</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>idx</span><span class='op'>|</span> <span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>swap_remove</span>(<span class='ident'>idx</span>))
+		<span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="kw-2">ref</span> <span class="ident">kvs</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">key</span> <span class="op">==</span> <span class="ident">kvs</span>.<span class="number">0</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">idx</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">swap_remove</span>(<span class="ident">idx</span>))
 	}
 
-	<span class='doccomment'>/// Removes the pair corresponding to the first K/V from the map, returning it if the key was previously in the map.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// # Examples</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='doccomment'>/// use bidir_map::BidirMap;</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// let mut map = BidirMap::new();</span>
-	<span class='doccomment'>/// map.insert(1, &quot;a&quot;);</span>
-	<span class='doccomment'>/// assert_eq!(map.remove_by_second(&amp;&quot;a&quot;), Some((1, &quot;a&quot;)));</span>
-	<span class='doccomment'>/// assert_eq!(map.remove_by_second(&amp;&quot;b&quot;), None);</span>
-	<span class='doccomment'>/// ```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>remove_by_second</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>Q</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span>
-		<span class='kw'>where</span> <span class='ident'>Kv2</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>,
-		      <span class='ident'>Q</span>  : <span class='ident'>PartialEq</span><span class='op'>&lt;</span><span class='ident'>Kv2</span><span class='op'>&gt;</span>,
+	<span class="doccomment">/// Removes the pair corresponding to the first K/V from the map, returning it if the key was previously in the map.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// # Examples</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// ```</span>
+	<span class="doccomment">/// use bidir_map::BidirMap;</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// let mut map = BidirMap::new();</span>
+	<span class="doccomment">/// map.insert(1, &quot;a&quot;);</span>
+	<span class="doccomment">/// assert_eq!(map.remove_by_second(&amp;&quot;a&quot;), Some((1, &quot;a&quot;)));</span>
+	<span class="doccomment">/// assert_eq!(map.remove_by_second(&amp;&quot;b&quot;), None);</span>
+	<span class="doccomment">/// ```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_by_second</span><span class="op">&lt;</span><span class="ident">Q</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">Q</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">Kv1</span>, <span class="ident">Kv2</span>)<span class="op">&gt;</span>
+		<span class="kw">where</span> <span class="ident">Kv2</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span>,
+		      <span class="ident">Q</span>  : <span class="ident">PartialEq</span><span class="op">&lt;</span><span class="ident">Kv2</span><span class="op">&gt;</span>,
 	{
-		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>iter</span>().<span class='ident'>position</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>key</span> <span class='op'>==</span> <span class='ident'>kvs</span>.<span class='number'>1</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>idx</span><span class='op'>|</span> <span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>swap_remove</span>(<span class='ident'>idx</span>))
+		<span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="kw-2">ref</span> <span class="ident">kvs</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">key</span> <span class="op">==</span> <span class="ident">kvs</span>.<span class="number">1</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">idx</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">swap_remove</span>(<span class="ident">idx</span>))
 	}
 }
 
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>Kv1</span>: <span class='ident'>PartialEq</span>, <span class='ident'>Kv2</span>: <span class='ident'>PartialEq</span><span class='op'>&gt;</span> <span class='ident'>IntoIterator</span> <span class='kw'>for</span> <span class='ident'>BidirMap</span><span class='op'>&lt;</span><span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
-	<span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> (<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>);
-	<span class='kw'>type</span> <span class='ident'>IntoIter</span> <span class='op'>=</span> <span class='ident'>vec</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Kv1</span>: <span class="ident">PartialEq</span>, <span class="ident">Kv2</span>: <span class="ident">PartialEq</span><span class="op">&gt;</span> <span class="ident">IntoIterator</span> <span class="kw">for</span> <span class="ident">BidirMap</span><span class="op">&lt;</span><span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> {
+	<span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> (<span class="ident">Kv1</span>, <span class="ident">Kv2</span>);
+	<span class="kw">type</span> <span class="ident">IntoIter</span> <span class="op">=</span> <span class="ident">vec</span>::<span class="ident">IntoIter</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span>;
 
-	<span class='kw'>fn</span> <span class='ident'>into_iter</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span>::<span class='ident'>IntoIter</span> {
-		<span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>into_iter</span>()
+	<span class="kw">fn</span> <span class="ident">into_iter</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">IntoIter</span> {
+		<span class="kw">return</span> <span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">into_iter</span>()
 	}
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>Kv1</span>: <span class='ident'>PartialEq</span>, <span class='ident'>Kv2</span>: <span class='ident'>PartialEq</span><span class='op'>&gt;</span> <span class='ident'>FromIterator</span><span class='op'>&lt;</span>(<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>BidirMap</span><span class='op'>&lt;</span><span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
-	<span class='kw'>fn</span> <span class='ident'>from_iter</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span>(<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;&gt;</span>(<span class='ident'>iter</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
-		<span class='ident'>BidirMap</span>{
-			<span class='ident'>cont</span>: <span class='ident'>Vec</span>::<span class='ident'>from_iter</span>(<span class='ident'>iter</span>),
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Kv1</span>: <span class="ident">PartialEq</span>, <span class="ident">Kv2</span>: <span class="ident">PartialEq</span><span class="op">&gt;</span> <span class="ident">FromIterator</span><span class="op">&lt;</span>(<span class="ident">Kv1</span>, <span class="ident">Kv2</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">BidirMap</span><span class="op">&lt;</span><span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> {
+	<span class="kw">fn</span> <span class="ident">from_iter</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span>(<span class="ident">Kv1</span>, <span class="ident">Kv2</span>)<span class="op">&gt;&gt;</span>(<span class="ident">iter</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+		<span class="ident">BidirMap</span>{
+			<span class="ident">cont</span>: <span class="ident">Vec</span>::<span class="ident">from_iter</span>(<span class="ident">iter</span>),
 		}
 	}
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>Kv1</span>: <span class='ident'>PartialEq</span>, <span class='ident'>Kv2</span>: <span class='ident'>PartialEq</span><span class='op'>&gt;</span> <span class='ident'>Extend</span><span class='op'>&lt;</span>(<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>BidirMap</span><span class='op'>&lt;</span><span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
-	<span class='kw'>fn</span> <span class='ident'>extend</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span>(<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>iter</span>: <span class='ident'>T</span>) {
-		<span class='self'>self</span>.<span class='ident'>cont</span>.<span class='ident'>extend</span>(<span class='ident'>iter</span>)
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Kv1</span>: <span class="ident">PartialEq</span>, <span class="ident">Kv2</span>: <span class="ident">PartialEq</span><span class="op">&gt;</span> <span class="ident">Extend</span><span class="op">&lt;</span>(<span class="ident">Kv1</span>, <span class="ident">Kv2</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">BidirMap</span><span class="op">&lt;</span><span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> {
+	<span class="kw">fn</span> <span class="ident">extend</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span>(<span class="ident">Kv1</span>, <span class="ident">Kv2</span>)<span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">iter</span>: <span class="ident">T</span>) {
+		<span class="self">self</span>.<span class="ident">cont</span>.<span class="ident">extend</span>(<span class="ident">iter</span>)
 	}
 }
 
 
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>: <span class='lifetime'>&#39;a</span>, <span class='ident'>Kv2</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-	<span class='ident'>iter</span>: <span class='ident'>slice</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, (<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Kv1</span>: <span class="lifetime">&#39;a</span>, <span class="ident">Kv2</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+	<span class="ident">iter</span>: <span class="ident">slice</span>::<span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, (<span class="ident">Kv1</span>, <span class="ident">Kv2</span>)<span class="op">&gt;</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
-	<span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> (<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>);
-	<span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>next</span>()
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> {
+	<span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> (<span class="ident">Kv1</span>, <span class="ident">Kv2</span>);
+	<span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next</span>()
 	}
 }
 
 
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>: <span class='lifetime'>&#39;a</span>, <span class='ident'>Kv2</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-	<span class='ident'>iter</span>: <span class='ident'>slice</span>::<span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, (<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IterMut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Kv1</span>: <span class="lifetime">&#39;a</span>, <span class="ident">Kv2</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+	<span class="ident">iter</span>: <span class="ident">slice</span>::<span class="ident">IterMut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, (<span class="ident">Kv1</span>, <span class="ident">Kv2</span>)<span class="op">&gt;</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
-	<span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> (<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>);
-	<span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>next</span>()
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">IterMut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> {
+	<span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> (<span class="ident">Kv1</span>, <span class="ident">Kv2</span>);
+	<span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next</span>()
 	}
 }
 
 
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FirstColumn</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>: <span class='lifetime'>&#39;a</span>, <span class='ident'>Kv2</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-	<span class='ident'>iter</span>: <span class='ident'>slice</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, (<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FirstColumn</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Kv1</span>: <span class="lifetime">&#39;a</span>, <span class="ident">Kv2</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+	<span class="ident">iter</span>: <span class="ident">slice</span>::<span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, (<span class="ident">Kv1</span>, <span class="ident">Kv2</span>)<span class="op">&gt;</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>FirstColumn</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
-	<span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Kv1</span>;
-	<span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>kvs</span>.<span class='number'>0</span>)
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">FirstColumn</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> {
+	<span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Kv1</span>;
+	<span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">ref</span> <span class="ident">kvs</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">kvs</span>.<span class="number">0</span>)
 	}
 }
 
 
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SecondColumn</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>: <span class='lifetime'>&#39;a</span>, <span class='ident'>Kv2</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-	<span class='ident'>iter</span>: <span class='ident'>slice</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, (<span class='ident'>Kv1</span>, <span class='ident'>Kv2</span>)<span class='op'>&gt;</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SecondColumn</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Kv1</span>: <span class="lifetime">&#39;a</span>, <span class="ident">Kv2</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+	<span class="ident">iter</span>: <span class="ident">slice</span>::<span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, (<span class="ident">Kv1</span>, <span class="ident">Kv2</span>)<span class="op">&gt;</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>SecondColumn</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>Kv1</span>, <span class='ident'>Kv2</span><span class='op'>&gt;</span> {
-	<span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Kv2</span>;
-	<span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>ref</span> <span class='ident'>kvs</span><span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>kvs</span>.<span class='number'>1</span>)
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">SecondColumn</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Kv1</span>, <span class="ident">Kv2</span><span class="op">&gt;</span> {
+	<span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Kv2</span>;
+	<span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">ref</span> <span class="ident">kvs</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">kvs</span>.<span class="number">1</span>)
 	}
 }
 </pre>
@@ -938,6 +928,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -958,7 +950,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -969,11 +961,8 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "bidir_map";
-        window.playgroundUrl = "";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>
