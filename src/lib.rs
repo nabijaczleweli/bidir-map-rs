@@ -294,10 +294,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 		where Kv1: Borrow<Q>,
 		      Q  : PartialEq<Kv1>,
 	{
-		self.cont.iter().find(|ref kvs| *key == kvs.0).and_then(|ref kvs| {
-			Some(unsafe { &mut *(((&kvs.1) as *const Kv2) as *mut Kv2) })  // This *should* be safe, we're casting &Kv2 to &mut Kv2 from a mutable context
-			                                                               // Using mutables all the way wouldn't work for the life of me.
-		})
+		self.cont.iter_mut().find(|ref kvs| *key == kvs.0).map(|&mut (_, ref mut kv2)| kv2)
 	}
 
 	/// Returns a mutable reference to the first K/V corresponding to the second K/V.
@@ -318,10 +315,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 		where Kv2: Borrow<Q>,
 		      Q  : PartialEq<Kv2>,
 	{
-		self.cont.iter().find(|ref kvs| *key == kvs.1).and_then(|ref kvs| {
-			Some(unsafe { &mut *(((&kvs.0) as *const Kv1) as *mut Kv1) })  // This *should* be safe, we're casting &Kv1 to &mut Kv1 from a mutable context
-			                                                               // Using mutables all the way wouldn't work for the life of me.
-		})
+		self.cont.iter_mut().find(|ref kvs| *key == kvs.1).map(|&mut (ref mut kv1, _)| kv1)
 	}
 
 	/// Removes the pair corresponding to the first K/V from the map, returning it if the key was previously in the map.
