@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["BidirMap","A bidirectional map."],["FirstColumn",""],["Iter",""],["IterMut",""],["SecondColumn",""]]});
+initSidebarItems({"macro":[["bidir_map","Create a `BidirMap` from a set of K/V-K/V pairs."]],"struct":[["BidirMap","A bidirectional map."],["FirstColumn",""],["Iter",""],["IterMut",""],["SecondColumn",""]]});

@@ -473,6 +473,42 @@
 <span id="428">428</span>
 <span id="429">429</span>
 <span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Bidirectional maps for Rust.</span>
 <span class="doccomment">//!</span>
@@ -494,6 +530,42 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">slice</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>::{<span class="ident">Extend</span>, <span class="ident">FromIterator</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">vec</span>;
+
+
+<span class="doccomment">/// Create a `BidirMap` from a set of K/V-K/V pairs.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// #[macro_use] extern crate bidir_map;</span>
+<span class="doccomment">/// # fn main() {</span>
+<span class="doccomment">/// let map = bidir_map!(</span>
+<span class="doccomment">///     &quot;a&quot; =&gt; 1,</span>
+<span class="doccomment">///     &quot;b&quot; =&gt; 2,</span>
+<span class="doccomment">/// );</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// assert_eq!(map.get_by_first(&amp;&quot;a&quot;), Some(&amp;1));</span>
+<span class="doccomment">/// assert_eq!(map.get_by_second(&amp;2),  Some(&amp;&quot;b&quot;));</span>
+<span class="doccomment">/// assert_eq!(map.get_by_first(&amp;&quot;c&quot;), None);</span>
+<span class="doccomment">/// # let mut best_map = bidir_map::BidirMap::new();</span>
+<span class="doccomment">/// # best_map.insert(&quot;a&quot;, 1);</span>
+<span class="doccomment">/// # best_map.insert(&quot;b&quot;, 2);</span>
+<span class="doccomment">/// # assert_eq!(map, best_map);</span>
+<span class="doccomment">/// # }</span>
+<span class="doccomment">/// ```</span>
+<span class="attribute">#[<span class="ident">macro_export</span>]</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">bidir_map</span> {
+	<span class="comment">// Ideally the separator would be &lt;=&gt; instead of =&gt; but it&#39;s parsed as &lt;= &gt; and therefore illegal</span>
+	($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">key</span>:<span class="ident">expr</span> <span class="op">=&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">value</span>:<span class="ident">expr</span>,)<span class="op">+</span>) <span class="op">=&gt;</span> {
+		<span class="macro">bidir_map</span><span class="macro">!</span>($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">key</span> <span class="op">=&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">value</span>),<span class="op">+</span>)
+	};
+
+	($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">key</span>:<span class="ident">expr</span> <span class="op">=&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">value</span>:<span class="ident">expr</span>),<span class="kw-2">*</span>) <span class="op">=&gt;</span> {{
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> ::<span class="ident">bidir_map</span>::<span class="ident">BidirMap</span>::<span class="ident">new</span>();
+		$(<span class="ident">map</span>.<span class="ident">insert</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">key</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">value</span>);)<span class="op">*</span>
+		<span class="ident">map</span>
+	}};
+}
 
 
 <span class="doccomment">/// A bidirectional map.</span>
