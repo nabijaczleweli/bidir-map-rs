@@ -20,6 +20,42 @@ use std::iter::{Extend, FromIterator};
 use std::vec;
 
 
+/// Create a `BidirMap` from a set of K/V-K/V pairs.
+///
+/// # Examples
+///
+/// ```
+/// #[macro_use] extern crate bidir_map;
+/// # fn main() {
+/// let map = bidir_map!(
+///     "a" => 1,
+///     "b" => 2,
+/// );
+///
+/// assert_eq!(map.get_by_first(&"a"), Some(&1));
+/// assert_eq!(map.get_by_second(&2),  Some(&"b"));
+/// assert_eq!(map.get_by_first(&"c"), None);
+/// # let mut best_map = bidir_map::BidirMap::new();
+/// # best_map.insert("a", 1);
+/// # best_map.insert("b", 2);
+/// # assert_eq!(map, best_map);
+/// # }
+/// ```
+#[macro_export]
+macro_rules! bidir_map {
+	// Ideally the separator would be <=> instead of => but it's parsed as <= > and therefore illegal
+	($($key:expr => $value:expr,)+) => {
+		bidir_map!($($key => $value),+)
+	};
+
+	($($key:expr => $value:expr),*) => {{
+		let mut map = ::bidir_map::BidirMap::new();
+		$(map.insert($key, $value);)*
+		map
+	}};
+}
+
+
 /// A bidirectional map.
 ///
 /// Bidirectional maps allow for mapping from and to both types.
