@@ -43,13 +43,14 @@ use std::vec;
 /// ```
 #[macro_export]
 macro_rules! bidir_map {
-	// Ideally the separator would be <=> instead of => but it's parsed as <= > and therefore illegal
-	($($key:expr => $value:expr,)+) => {
-		bidir_map!($($key => $value),+)
-	};
+	(@single $($x:tt)*) => (());
+	(@count $($rest:expr),*) => (<[()]>::len(&[$(bidir_map!(@single $rest)),*]));
 
+	// Ideally the separator would be <=> instead of => but it's parsed as <= > and therefore illegal
+	($($key:expr => $value:expr,)+) => { bidir_map!($($key => $value),+) };
 	($($key:expr => $value:expr),*) => {{
-		let mut map = ::bidir_map::BidirMap::new();
+		let cap = bidir_map!(@count $($key),*);
+		let mut map = ::bidir_map::BidirMap::with_capacity(cap);
 		$(map.insert($key, $value);)*
 		map
 	}};
@@ -74,6 +75,15 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	pub fn new() -> Self {
 		BidirMap{
 			cont: Vec::new(),
+		}
+	}
+
+	/// Create a new empty instance of `BidirMap` with the specified capacity.
+	///
+	/// It will be able to hold at least `capacity` elements without reallocating.
+	pub fn with_capacity(capacity: usize) -> Self {
+		BidirMap{
+			cont: Vec::with_capacity(capacity),
 		}
 	}
 
