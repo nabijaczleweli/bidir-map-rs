@@ -521,6 +521,16 @@
 <span id="476">476</span>
 <span id="477">477</span>
 <span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Bidirectional maps for Rust.</span>
 <span class="doccomment">//!</span>
@@ -567,13 +577,14 @@
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">bidir_map</span> {
-	<span class="comment">// Ideally the separator would be &lt;=&gt; instead of =&gt; but it&#39;s parsed as &lt;= &gt; and therefore illegal</span>
-	($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">key</span>:<span class="ident">expr</span> <span class="op">=&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">value</span>:<span class="ident">expr</span>,)<span class="op">+</span>) <span class="op">=&gt;</span> {
-		<span class="macro">bidir_map</span><span class="macro">!</span>($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">key</span> <span class="op">=&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">value</span>),<span class="op">+</span>)
-	};
+	(@<span class="ident">single</span> $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>:<span class="ident">tt</span>)<span class="kw-2">*</span>) <span class="op">=&gt;</span> (());
+	(@<span class="ident">count</span> $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">rest</span>:<span class="ident">expr</span>),<span class="kw-2">*</span>) <span class="op">=&gt;</span> (<span class="op">&lt;</span>[()]<span class="op">&gt;</span>::<span class="ident">len</span>(<span class="kw-2">&amp;</span>[$(<span class="macro">bidir_map</span><span class="macro">!</span>(@<span class="ident">single</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rest</span>)),<span class="kw-2">*</span>]));
 
+	<span class="comment">// Ideally the separator would be &lt;=&gt; instead of =&gt; but it&#39;s parsed as &lt;= &gt; and therefore illegal</span>
+	($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">key</span>:<span class="ident">expr</span> <span class="op">=&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">value</span>:<span class="ident">expr</span>,)<span class="op">+</span>) <span class="op">=&gt;</span> { <span class="macro">bidir_map</span><span class="macro">!</span>($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">key</span> <span class="op">=&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">value</span>),<span class="op">+</span>) };
 	($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">key</span>:<span class="ident">expr</span> <span class="op">=&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">value</span>:<span class="ident">expr</span>),<span class="kw-2">*</span>) <span class="op">=&gt;</span> {{
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> ::<span class="ident">bidir_map</span>::<span class="ident">BidirMap</span>::<span class="ident">new</span>();
+		<span class="kw">let</span> <span class="ident">cap</span> <span class="op">=</span> <span class="macro">bidir_map</span><span class="macro">!</span>(@<span class="ident">count</span> $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">key</span>),<span class="kw-2">*</span>);
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> ::<span class="ident">bidir_map</span>::<span class="ident">BidirMap</span>::<span class="ident">with_capacity</span>(<span class="ident">cap</span>);
 		$(<span class="ident">map</span>.<span class="ident">insert</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">key</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">value</span>);)<span class="op">*</span>
 		<span class="ident">map</span>
 	}};
@@ -598,6 +609,15 @@
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="self">Self</span> {
 		<span class="ident">BidirMap</span>{
 			<span class="ident">cont</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+		}
+	}
+
+	<span class="doccomment">/// Create a new empty instance of `BidirMap` with the specified capacity.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// It will be able to hold at least `capacity` elements without reallocating.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_capacity</span>(<span class="ident">capacity</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+		<span class="ident">BidirMap</span>{
+			<span class="ident">cont</span>: <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">capacity</span>),
 		}
 	}
 
