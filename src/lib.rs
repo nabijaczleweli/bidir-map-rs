@@ -418,6 +418,9 @@ impl<Kv1: PartialEq, Kv2: PartialEq> Extend<(Kv1, Kv2)> for BidirMap<Kv1, Kv2> {
 }
 
 
+/// An iterator over the K/V pairs contained in a `BidirMap`.
+///
+/// See documentation of `BidirMap::iter()` for more.
 pub struct Iter<'a, Kv1: 'a, Kv2: 'a> {
 	iter: slice::Iter<'a, (Kv1, Kv2)>,
 }
@@ -430,6 +433,9 @@ impl<'a, Kv1, Kv2> Iterator for Iter<'a, Kv1, Kv2> {
 }
 
 
+/// An iterator over mutable K/V pairs contained in a `BidirMap`.
+///
+/// See documentation of `BidirMap::iter_mut()` for more.
 pub struct IterMut<'a, Kv1: 'a, Kv2: 'a> {
 	iter: slice::IterMut<'a, (Kv1, Kv2)>,
 }
@@ -442,6 +448,9 @@ impl<'a, Kv1, Kv2> Iterator for IterMut<'a, Kv1, Kv2> {
 }
 
 
+/// An iterator the first set of K/Vs in a `BidirMap`.
+///
+/// See documentation of `BidirMap::first_col()` for more.
 pub struct FirstColumn<'a, Kv1: 'a, Kv2: 'a> {
 	iter: slice::Iter<'a, (Kv1, Kv2)>,
 }
@@ -454,6 +463,9 @@ impl<'a, Kv1, Kv2> Iterator for FirstColumn<'a, Kv1, Kv2> {
 }
 
 
+/// An iterator the second set of K/Vs in a `BidirMap`.
+///
+/// See documentation of `BidirMap::second_col()` for more.
 pub struct SecondColumn<'a, Kv1: 'a, Kv2: 'a> {
 	iter: slice::Iter<'a, (Kv1, Kv2)>,
 }
