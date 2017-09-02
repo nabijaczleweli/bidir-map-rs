@@ -531,6 +531,9 @@
 <span id="486">486</span>
 <span id="487">487</span>
 <span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Bidirectional maps for Rust.</span>
 <span class="doccomment">//!</span>
@@ -538,8 +541,11 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//! use bidir_map::BidirMap;</span>
+<span class="doccomment">//! use std::default::Default;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! let mut map = BidirMap::new();</span>
+<span class="doccomment">//! assert_eq!(map, Default::default());</span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! map.insert(1, &quot;a&quot;);</span>
 <span class="doccomment">//! assert_eq!(map.get_by_first(&amp;1), Some(&amp;&quot;a&quot;));</span>
 <span class="doccomment">//! assert_eq!(map.get_by_first(&amp;2), None);</span>
@@ -599,7 +605,7 @@
 <span class="doccomment">/// each treating one of the types as keys (`get()` -&gt; `get_by_{first,second}()`).</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Performance: `O(n)`, mostly.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BidirMap</span><span class="op">&lt;</span><span class="ident">Kv1</span>: <span class="ident">PartialEq</span>, <span class="ident">Kv2</span>: <span class="ident">PartialEq</span><span class="op">&gt;</span> {
 	<span class="ident">cont</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Kv1</span>, <span class="ident">Kv2</span>)<span class="op">&gt;</span>,
 }
