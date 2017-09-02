@@ -4,8 +4,11 @@
 //!
 //! ```
 //! use bidir_map::BidirMap;
+//! use std::default::Default;
 //!
 //! let mut map = BidirMap::new();
+//! assert_eq!(map, Default::default());
+//!
 //! map.insert(1, "a");
 //! assert_eq!(map.get_by_first(&1), Some(&"a"));
 //! assert_eq!(map.get_by_first(&2), None);
@@ -65,7 +68,7 @@ macro_rules! bidir_map {
 /// each treating one of the types as keys (`get()` -> `get_by_{first,second}()`).
 ///
 /// Performance: `O(n)`, mostly.
-#[derive(Clone, Debug, Hash, PartialEq, Eq)]
+#[derive(Default, Clone, Debug, Hash, PartialEq, Eq)]
 pub struct BidirMap<Kv1: PartialEq, Kv2: PartialEq> {
 	cont: Vec<(Kv1, Kv2)>,
 }
