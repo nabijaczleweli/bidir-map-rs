@@ -143,9 +143,9 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// }
 	///
 	/// let first = map.iter().next().unwrap();
-	/// assert_eq!(*first, (1, "a"));
+	/// assert_eq!(first, (&1, &"a"));
 	/// ```
-	pub fn iter<'s>(&'s self) -> Iter<'s, Kv1, Kv2> {
+	pub fn iter(&self) -> Iter<Kv1, Kv2> {
 		Iter{
 			iter: self.cont.iter(),
 		}
@@ -165,12 +165,12 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	///
 	/// // add 10 to the value if the key isn't "a"
 	/// for kv in map.iter_mut() {
-	/// 	if &kv.0 != &"a" {
-	/// 		kv.1 += 10;
+	/// 	if *kv.0 != "a" {
+	/// 		*kv.1 += 10;
 	/// 	}
 	/// }
 	/// ```
-	pub fn iter_mut<'s>(&'s mut self) -> IterMut<'s, Kv1, Kv2> {
+	pub fn iter_mut(&mut self) -> IterMut<Kv1, Kv2> {
 		IterMut{
 			iter: self.cont.iter_mut(),
 		}
@@ -190,7 +190,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// let keys: Vec<_> = a.first_col().cloned().collect();
 	/// assert_eq!(keys, [1, 2]);
 	/// ```
-	pub fn first_col<'s>(&'s self) -> FirstColumn<'s, Kv1, Kv2> {
+	pub fn first_col(&self) -> FirstColumn<Kv1, Kv2> {
 		FirstColumn{
 			iter: self.cont.iter(),
 		}
@@ -210,7 +210,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// let keys: Vec<_> = a.second_col().cloned().collect();
 	/// assert_eq!(keys, ["a", "b"]);
 	/// ```
-	pub fn second_col<'s>(&'s self) -> SecondColumn<'s, Kv1, Kv2> {
+	pub fn second_col(&self) -> SecondColumn<Kv1, Kv2> {
 		SecondColumn{
 			iter: self.cont.iter(),
 		}
@@ -439,9 +439,9 @@ pub struct Iter<'a, Kv1: 'a, Kv2: 'a> {
 }
 
 impl<'a, Kv1, Kv2> Iterator for Iter<'a, Kv1, Kv2> {
-	type Item = &'a (Kv1, Kv2);
+	type Item = (&'a Kv1, &'a Kv2);
 	fn next(&mut self) -> Option<Self::Item> {
-		self.iter.next()
+		self.iter.next().map(|&(ref kv1, ref kv2)| (kv1, kv2))
 	}
 }
 
@@ -454,9 +454,9 @@ pub struct IterMut<'a, Kv1: 'a, Kv2: 'a> {
 }
 
 impl<'a, Kv1, Kv2> Iterator for IterMut<'a, Kv1, Kv2> {
-	type Item = &'a mut (Kv1, Kv2);
+	type Item = (&'a mut Kv1, &'a mut Kv2);
 	fn next(&mut self) -> Option<Self::Item> {
-		self.iter.next()
+		self.iter.next().map(|&mut (ref mut kv1, ref mut kv2)| (kv1, kv2))
 	}
 }
 
