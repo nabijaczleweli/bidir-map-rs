@@ -28,7 +28,7 @@
 			{
 				"follow_symlinks": true,
 				"name": "Tests",
-				"path": "test"
+				"path": "tests"
 			},
 			{
 				"follow_symlinks": true,

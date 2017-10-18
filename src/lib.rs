@@ -3,23 +3,31 @@
 //! # Examples
 //!
 //! ```
-//! use bidir_map::BidirMap;
+//! use bidir_map::{BidirMap, ByFirst, BySecond};
 //! use std::default::Default;
 //!
 //! let mut map = BidirMap::new();
 //! assert_eq!(map, Default::default());
 //!
 //! map.insert(1, "a");
+//!
 //! assert_eq!(map.get_by_first(&1), Some(&"a"));
 //! assert_eq!(map.get_by_first(&2), None);
 //! assert_eq!(map.get_by_second(&"a"), Some(&1));
 //! assert_eq!(map.get_by_second(&"b"), None);
+//!
+//! assert_eq!(map[ByFirst(&1)], "a");
+//! assert_eq!(map[BySecond(&"a")], 1);
+//! // These would panic:
+//! //   map[ByFirst(&2)];
+//! //   map[BySecond(&"b")];
 //! ```
 
 
 use std::borrow::Borrow;
 use std::slice;
 use std::iter::{Extend, FromIterator};
+use std::ops::Index;
 use std::vec;
 
 
@@ -156,6 +164,9 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// # Examples
 	///
 	/// ```
+	/// # #[macro_use]
+	/// # extern crate bidir_map;
+	/// # fn main() {
 	/// use bidir_map::BidirMap;
 	///
 	/// let mut map = BidirMap::new();
@@ -169,6 +180,8 @@ impl<Kv1: PartialEq, Kv2: PartialEq> BidirMap<Kv1, Kv2> {
 	/// 		*kv.1 += 10;
 	/// 	}
 	/// }
+	/// # assert_eq!(map, bidir_map!["a" => 1, "b" => 12, "c" => 13]);
+	/// # }
 	/// ```
 	pub fn iter_mut(&mut self) -> IterMut<Kv1, Kv2> {
 		IterMut{
@@ -431,9 +444,80 @@ impl<Kv1: PartialEq, Kv2: PartialEq> Extend<(Kv1, Kv2)> for BidirMap<Kv1, Kv2> {
 }
 
 
+/// Wrapper type for getting second keys/values with first keys/values via `Index`.
+///
+/// To assume that by-first is the "default" would be incorrect, so thus you one can wrap their indices with this and all is swell.
+///
+/// # Examples
+///
+/// ```
+/// use bidir_map::{BidirMap, ByFirst};
+///
+/// let mut map = BidirMap::new();
+/// map.insert(1, "a");
+/// assert_eq!(map[ByFirst(&1)], "a");
+/// assert_eq!(map[&ByFirst(&1)], "a");
+/// ```
+pub struct ByFirst<'q, Q: ?Sized + 'q>(pub &'q Q);
+
+/// Wrapper type for getting second keys/values with first keys/values via `Index`.
+///
+/// # Examples
+///
+/// ```
+/// use bidir_map::{BidirMap, BySecond};
+///
+/// let mut map = BidirMap::new();
+/// map.insert(1, "a");
+/// assert_eq!(map[BySecond(&"a")], 1);
+/// assert_eq!(map[&BySecond(&"a")], 1);
+/// ```
+pub struct BySecond<'q, Q: ?Sized + 'q>(pub &'q Q);
+
+impl<'q, Kv1: PartialEq, Kv2: PartialEq, Q: ?Sized + 'q> Index<ByFirst<'q, Q>> for BidirMap<Kv1, Kv2>
+	where Kv1: Borrow<Q>,
+	      Q  : PartialEq<Kv1>,
+{
+	type Output = Kv2;
+	fn index(&self, key: ByFirst<Q>) -> &Self::Output {
+		self.get_by_first(&key.0).expect("no entry found for first key/value")
+	}
+}
+
+impl<'a, 'q, Kv1: PartialEq, Kv2: PartialEq, Q: ?Sized + 'q> Index<&'a ByFirst<'q, Q>> for BidirMap<Kv1, Kv2>
+	where Kv1: Borrow<Q>,
+	      Q  : PartialEq<Kv1>,
+{
+	type Output = Kv2;
+	fn index(&self, key: &ByFirst<Q>) -> &Self::Output {
+		self.get_by_first(&key.0).expect("no entry found for first key/value")
+	}
+}
+
+impl<'q, Kv1: PartialEq, Kv2: PartialEq, Q: ?Sized + 'q> Index<BySecond<'q, Q>> for BidirMap<Kv1, Kv2>
+	where Kv2: Borrow<Q>,
+	      Q  : PartialEq<Kv2>,
+{
+	type Output = Kv1;
+	fn index(&self, key: BySecond<Q>) -> &Self::Output {
+		self.get_by_second(&key.0).expect("no entry found for second key/value")
+	}
+}
+
+impl<'a, 'q, Kv1: PartialEq, Kv2: PartialEq, Q: ?Sized + 'q> Index<&'a BySecond<'q, Q>> for BidirMap<Kv1, Kv2>
+	where Kv2: Borrow<Q>,
+	      Q  : PartialEq<Kv2>,
+{
+	type Output = Kv1;
+	fn index(&self, key: &BySecond<Q>) -> &Self::Output {
+		self.get_by_second(&key.0).expect("no entry found for second key/value")
+	}
+}
+
+
 /// An iterator over the K/V pairs contained in a `BidirMap`.
 ///
-/// See documentation of `BidirMap::iter()` for more.
+/// See documentation of [`BidirMap::iter()`](struct.BidirMap.html#method.iter) for more.
 pub struct Iter<'a, Kv1: 'a, Kv2: 'a> {
 	iter: slice::Iter<'a, (Kv1, Kv2)>,
 }
@@ -448,7 +532,7 @@ impl<'a, Kv1, Kv2> Iterator for Iter<'a, Kv1, Kv2> {
 
 /// An iterator over mutable K/V pairs contained in a `BidirMap`.
 ///
-/// See documentation of `BidirMap::iter_mut()` for more.
+/// See documentation of [`BidirMap::iter_mut()`](struct.BidirMap.html#method.iter_mut) for more.
 pub struct IterMut<'a, Kv1: 'a, Kv2: 'a> {
 	iter: slice::IterMut<'a, (Kv1, Kv2)>,
 }
@@ -463,7 +547,7 @@ impl<'a, Kv1, Kv2> Iterator for IterMut<'a, Kv1, Kv2> {
 
 /// An iterator the first set of K/Vs in a `BidirMap`.
 ///
-/// See documentation of `BidirMap::first_col()` for more.
+/// See documentation of [`BidirMap::first_col()`](struct.BidirMap.html#method.first_col) for more.
 pub struct FirstColumn<'a, Kv1: 'a, Kv2: 'a> {
 	iter: slice::Iter<'a, (Kv1, Kv2)>,
 }
@@ -478,7 +562,7 @@ impl<'a, Kv1, Kv2> Iterator for FirstColumn<'a, Kv1, Kv2> {
 
 /// An iterator the second set of K/Vs in a `BidirMap`.
 ///
-/// See documentation of `BidirMap::second_col()` for more.
+/// See documentation of [`BidirMap::second_col()`](struct.BidirMap.html#method.second_col) for more.
 pub struct SecondColumn<'a, Kv1: 'a, Kv2: 'a> {
 	iter: slice::Iter<'a, (Kv1, Kv2)>,
 }
