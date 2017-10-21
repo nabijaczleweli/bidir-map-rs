@@ -36,7 +36,8 @@ use std::vec;
 /// # Examples
 ///
 /// ```
-/// #[macro_use] extern crate bidir_map;
+/// #[macro_use]
+/// extern crate bidir_map;
 /// # fn main() {
 /// let map = bidir_map!(
 ///     "a" => 1,
@@ -458,6 +459,7 @@ impl<Kv1: PartialEq, Kv2: PartialEq> Extend<(Kv1, Kv2)> for BidirMap<Kv1, Kv2> {
 /// assert_eq!(map[ByFirst(&1)], "a");
 /// assert_eq!(map[&ByFirst(&1)], "a");
 /// ```
+#[derive(Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct ByFirst<'q, Q: ?Sized + 'q>(pub &'q Q);
 
 /// Wrapper type for getting second keys/values with first keys/values via `Index`.
@@ -472,6 +474,7 @@ pub struct ByFirst<'q, Q: ?Sized + 'q>(pub &'q Q);
 /// assert_eq!(map[BySecond(&"a")], 1);
 /// assert_eq!(map[&BySecond(&"a")], 1);
 /// ```
+#[derive(Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct BySecond<'q, Q: ?Sized + 'q>(pub &'q Q);
 
 impl<'q, Kv1: PartialEq, Kv2: PartialEq, Q: ?Sized + 'q> Index<ByFirst<'q, Q>> for BidirMap<Kv1, Kv2>
