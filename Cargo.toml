@@ -8,7 +8,7 @@ keywords = ["bidir-map", "container", "bidirectional", "map"]
 categories = ["algorithms", "data-structures"]
 license = "MIT"
 # Remember to also update in appveyor.yml
-version = "0.6.0"
+version = "1.0.0"
 authors = ["nabijaczleweli <nabijaczleweli@gmail.com>",
            "Jake Goulding <jake.goulding@gmail.com>",
            "kennytm <kennytm@gmail.com>",
