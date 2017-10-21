@@ -48,22 +48,29 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/bidir_map/lib.rs.html#1-491' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/bidir_map/lib.rs.html#1-575' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Bidirectional maps for Rust.</p>
 
 <h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
 <pre class="rust rust-example-rendered">
-<span class="kw">use</span> <span class="ident">bidir_map</span>::<span class="ident">BidirMap</span>;
+<span class="kw">use</span> <span class="ident">bidir_map</span>::{<span class="ident">BidirMap</span>, <span class="ident">ByFirst</span>, <span class="ident">BySecond</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">default</span>::<span class="ident">Default</span>;
 
 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> <span class="ident">BidirMap</span>::<span class="ident">new</span>();
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">map</span>, <span class="ident">Default</span>::<span class="ident">default</span>());
 
 <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">1</span>, <span class="string">&quot;a&quot;</span>);
+
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">map</span>.<span class="ident">get_by_first</span>(<span class="kw-2">&amp;</span><span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">&quot;a&quot;</span>));
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">map</span>.<span class="ident">get_by_first</span>(<span class="kw-2">&amp;</span><span class="number">2</span>), <span class="prelude-val">None</span>);
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">map</span>.<span class="ident">get_by_second</span>(<span class="kw-2">&amp;</span><span class="string">&quot;a&quot;</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">1</span>));
-<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">map</span>.<span class="ident">get_by_second</span>(<span class="kw-2">&amp;</span><span class="string">&quot;b&quot;</span>), <span class="prelude-val">None</span>);</pre>
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">map</span>.<span class="ident">get_by_second</span>(<span class="kw-2">&amp;</span><span class="string">&quot;b&quot;</span>), <span class="prelude-val">None</span>);
+
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">map</span>[<span class="ident">ByFirst</span>(<span class="kw-2">&amp;</span><span class="number">1</span>)], <span class="string">&quot;a&quot;</span>);
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">map</span>[<span class="ident">BySecond</span>(<span class="kw-2">&amp;</span><span class="string">&quot;a&quot;</span>)], <span class="number">1</span>);
+<span class="comment">// These would panic:</span>
+<span class="comment">//   map[ByFirst(&amp;2)];</span>
+<span class="comment">//   map[BySecond(&amp;&quot;b&quot;)];</span></pre>
 </div><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
 <table>
                        <tr class=' module-item'>
@@ -79,6 +86,20 @@
                                   title='struct bidir_map::BidirMap'>BidirMap</a></td>
                            <td class='docblock-short'>
                                 <p>A bidirectional map.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.ByFirst.html"
+                                  title='struct bidir_map::ByFirst'>ByFirst</a></td>
+                           <td class='docblock-short'>
+                                <p>Wrapper type for getting second keys/values with first keys/values via <code>Index</code>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BySecond.html"
+                                  title='struct bidir_map::BySecond'>BySecond</a></td>
+                           <td class='docblock-short'>
+                                <p>Wrapper type for getting second keys/values with first keys/values via <code>Index</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
