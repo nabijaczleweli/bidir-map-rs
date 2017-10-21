@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/bidir_map/lib.rs.html#56-68' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/bidir_map/lib.rs.html#57-69' title='goto source code'>[src]</a></span></h1>
 <pre class="rust macro">
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">bidir_map</span> {
     (@<span class="ident">single</span> $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>:<span class="ident">tt</span>)<span class="kw-2">*</span>) <span class="op">=&gt;</span> { ... };
@@ -60,7 +60,8 @@
 
 <h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
 <pre class="rust rust-example-rendered">
-<span class="attribute">#[<span class="ident">macro_use</span>]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">bidir_map</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">bidir_map</span>;
 <span class="kw">let</span> <span class="ident">map</span> <span class="op">=</span> <span class="macro">bidir_map</span><span class="macro">!</span>(
     <span class="string">&quot;a&quot;</span> <span class="op">=&gt;</span> <span class="number">1</span>,
     <span class="string">&quot;b&quot;</span> <span class="op">=&gt;</span> <span class="number">2</span>,
